@@ -204,7 +204,7 @@
     },
     async listReviews() {
       const res = await sb.from("reviews")
-        .select("id, user_id, item_id, rating, body, created_at, updated_at, profiles(username), review_likes(user_id)")
+        .select("id, user_id, item_id, rating, body, created_at, updated_at, profiles!user_id(username), review_likes(user_id)")
         .order("created_at", { ascending: false });
       check(res);
       return res.data.map(r => ({
