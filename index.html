@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CineLab — Reseñas de cine y series</title>
+<meta name="description" content="Reseñas y recomendaciones de películas y series, organizadas por categoría, para decidir rápido qué mirar hoy.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#/">CINE<span>LAB</span></a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">☰</button>
+  <nav id="mainNav">
+    <a href="#/" data-page="inicio">Inicio</a>
+    <a href="#/catalogo" data-page="catalogo">Catálogo</a>
+    <a href="#/resenas" data-page="resenas">Reseñas</a>
+    <a href="#/ranking" data-page="ranking">Ranking</a>
+    <a href="#/contacto" data-page="contacto">Contacto</a>
+  </nav>
+  <div class="auth-box" id="authBox"></div>
+</header>
+
+<main id="app"></main>
+
+<div class="modal-back" id="modalBack">
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<footer class="site-footer">
+  <span>CineLab — Proyecto Laboratorio de Medios Gráficos, UMET.</span>
+  <a href="#/medallas">Medallas y niveles</a>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
