@@ -18,6 +18,10 @@ window.CINELAB_DATA = {
     "Terror y Suspenso": {
       titulo: "Terror y suspenso",
       intro: "Analizamos la historia, las actuaciones, los personajes, los giros y la forma en que cada producción logra generar miedo o tensión. El Top 3 de 2025 combina la opinión de la crítica, del público y la nuestra."
+    },
+    "Series de Marvel": {
+      titulo: "Marvel: por qué sus series siguen conquistando al público",
+      intro: "Cuando pensamos en Marvel, lo primero que se nos viene a la cabeza son sus grandes películas. Sin embargo, las series se convirtieron en una parte fundamental de este universo: desde Daredevil y Jessica Jones hasta WandaVision, Loki, Moon Knight y Ms. Marvel, Marvel encontró en la televisión y el streaming una manera diferente de contar sus historias y de acercarnos mucho más a sus personajes. ¿Por qué son tan buenas? Porque no dependen únicamente de los superpoderes: lo interesante está en los personajes, sus conflictos, sus vínculos y las decisiones que tienen que tomar. Marvel se anima a experimentar con distintos géneros —drama, comedia, ciencia ficción, fantasía, acción y misterio— y las series permiten acompañar a los personajes durante más tiempo, entender sus motivaciones y ver cómo cambian. Detrás de cada traje, cada poder y cada batalla hay una historia humana capaz de generar identificación."
     }
   },
 
@@ -108,6 +112,54 @@ window.CINELAB_DATA = {
       top: 3,
       sinopsis: "Ed y Lorraine Warren vuelven a enfrentarse a un caso paranormal.",
       resenaEquipo: "Se destaca la relación entre los protagonistas y el uso de sonidos, silencios y ambientación para generar miedo. Una buena excusa para compararla con las películas anteriores de la saga."
+    },
+    {
+      id: "wandavision",
+      titulo: "WandaVision",
+      categoria: "Series de Marvel",
+      tipo: "Serie",
+      anio: "2021",
+      anioNum: 2021,
+      reparto: "Elizabeth Olsen, Paul Bettany · Disney+",
+      rating: null,
+      sinopsis: "Wanda Maximoff y Visión viven una vida suburbana ideal que cambia de estilo de televisión episodio a episodio, hasta que empiezan a sospechar que nada es lo que parece.",
+      resenaEquipo: "Probablemente una de las propuestas más originales de Marvel en Disney+: utilizó diferentes estilos de televisión para contar una historia relacionada con Wanda Maximoff y, al mismo tiempo, explorar emociones como el duelo y la pérdida."
+    },
+    {
+      id: "loki",
+      titulo: "Loki",
+      categoria: "Series de Marvel",
+      tipo: "Serie",
+      anio: "2021–2023",
+      anioNum: 2021,
+      reparto: "Tom Hiddleston, Owen Wilson, Sophia Di Martino · Disney+",
+      rating: null,
+      sinopsis: "El dios del engaño queda atrapado por la Autoridad de Variación Temporal y tiene que ayudar a reparar la línea del tiempo que él mismo alteró.",
+      resenaEquipo: "Aprovecha al personaje para jugar con los viajes temporales, las distintas posibilidades del universo y la identidad del propio protagonista."
+    },
+    {
+      id: "falcon-and-the-winter-soldier",
+      titulo: "The Falcon and the Winter Soldier",
+      categoria: "Series de Marvel",
+      tipo: "Serie",
+      anio: "2021",
+      anioNum: 2021,
+      reparto: "Anthony Mackie, Sebastian Stan · Disney+",
+      rating: null,
+      sinopsis: "Sam Wilson y Bucky Barnes se unen tras el retiro de Steve Rogers y enfrentan una amenaza global mientras discuten quién debe cargar con el escudo.",
+      resenaEquipo: "Se enfoca en la herencia del legado del Capitán América y en los conflictos sociales y políticos que rodean a sus protagonistas."
+    },
+    {
+      id: "daredevil",
+      titulo: "Daredevil",
+      categoria: "Series de Marvel",
+      tipo: "Serie",
+      anio: "2015–2018 / 2025",
+      anioNum: 2015,
+      reparto: "Charlie Cox, Vincent D'Onofrio, Deborah Ann Woll",
+      rating: null,
+      sinopsis: "Matt Murdock, abogado ciego de Hell's Kitchen, busca justicia de día en los tribunales y de noche como un vigilante enmascarado. Volvió en una nueva etapa con Daredevil: Born Again.",
+      resenaEquipo: "La serie que merece una mención especial. Matt Murdock funciona porque combina dos mundos: durante el día es abogado y busca justicia a través de la ley; por la noche se convierte en un vigilante que protege su barrio. Esa dualidad hace que la historia sea mucho más que una serie de superhéroes, y que Marvel haya vuelto a recuperar al personaje demuestra cuánto interés sigue generando."
     }
   ]
 };

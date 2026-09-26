@@ -41,6 +41,11 @@
     return (list.reduce((n, r) => n + r.rating, 0) / list.length * 2).toFixed(1);
   }
 
+  // Puntaje para ordenar y filtrar: el del equipo o, si no tiene, el de la comunidad.
+  function score(i) {
+    return i.rating != null ? i.rating : Number(communityScore(i.id) || 0);
+  }
+
   function initials(name) { return esc((name || "?").slice(0, 2).toUpperCase()); }
 
   function toast(html, kind) {
@@ -130,7 +135,7 @@
       <a class="card" href="#/titulo/${esc(i.id)}">
         <p class="cat">${esc(i.categoria)}</p>
         <h3>${esc(i.titulo)}</h3>
-        <p class="meta">${esc(i.tipo)} · ${esc(i.anio)} · <span class="rating">★ ${esc(i.rating)}</span></p>
+        <p class="meta">${esc(i.tipo)} · ${esc(i.anio)}${i.rating != null ? ` · <span class="rating">★ ${esc(i.rating)}</span>` : ""}</p>
         <p class="snippet">${esc(i.sinopsis)}</p>
         <p class="card-foot">${n ? `💬 ${n} ${n === 1 ? "reseña" : "reseñas"} · comunidad ${community}` : "Sin reseñas todavía"}${state.watchlist.includes(i.id) ? " · 📌 en tu lista" : ""}</p>
       </a>`;
@@ -171,7 +176,7 @@
 
   // ------------------------------------------------------------------ inicio
   function viewHome() {
-    const destacados = items.slice().sort((a, b) => b.rating - a.rating).slice(0, 4);
+    const destacados = items.slice().sort((a, b) => score(b) - score(a)).slice(0, 4);
     const top = items.filter(i => i.top).sort((a, b) => a.top - b.top);
     const ultimas = state.reviews.slice(0, 3);
     const medals = ["🎬", "👏", "🔥", "🧭", "🦇", "🚩"];
@@ -269,10 +274,10 @@
       (f.cat === "Todas" || i.categoria === f.cat) &&
       (f.tipo === "Todos" || i.tipo === f.tipo) &&
       (f.anio === "Todos" || String(i.anioNum) === f.anio) &&
-      i.rating >= Number(f.min) &&
+      score(i) >= Number(f.min) &&
       (!q || [i.titulo, i.reparto, i.categoria, i.sinopsis].join(" ").toLowerCase().includes(q)));
     const sorters = {
-      rating: (a, b) => b.rating - a.rating,
+      rating: (a, b) => score(b) - score(a),
       recientes: (a, b) => b.anioNum - a.anioNum,
       resenas: (a, b) => reviewsFor(b.id).length - reviewsFor(a.id).length,
       az: (a, b) => a.titulo.localeCompare(b.titulo, "es")
@@ -312,7 +317,7 @@
           </div>
         </div>
         <aside class="scores">
-          <div class="score"><span class="score-num">${esc(i.rating)}</span><span class="score-label">Equipo CineLab</span></div>
+          <div class="score"><span class="score-num">${i.rating != null ? esc(i.rating) : "–"}</span><span class="score-label">Equipo CineLab${i.rating != null ? "" : " · sin puntaje"}</span></div>
           <div class="score"><span class="score-num">${community || "–"}</span><span class="score-label">Comunidad · ${list.length} ${list.length === 1 ? "reseña" : "reseñas"}</span></div>
         </aside>
       </section>

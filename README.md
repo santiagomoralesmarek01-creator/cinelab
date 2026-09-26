@@ -70,6 +70,8 @@ supabase/schema.sql   base de datos para Supabase
 
 Sumá un objeto a `items` en `js/data.js` con un `id` único (minúsculas y guiones, ej. `"casi-angeles"`).
 El resto (catálogo, filtros, ficha, reseñas) se actualiza solo.
+Si el equipo todavía no le puso puntaje, usá `rating: null`: se ordena y filtra con el promedio de la comunidad.
+Para una categoría nueva, agregala también en `categorias` con su título e introducción.
 
 ## Equipo
 
