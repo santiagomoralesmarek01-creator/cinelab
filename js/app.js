@@ -3,6 +3,8 @@
 
   const { items, categorias } = window.CINELAB_DATA;
   const itemsById = Object.fromEntries(items.map(i => [i.id, i]));
+  // Puntaje original de data.js; un admin puede reemplazarlo desde el sitio.
+  items.forEach(i => { i.ratingBase = i.rating; });
   const articulos = window.CINELAB_ARTICULOS || [];
   const articulosById = Object.fromEntries(articulos.map(a => [a.id, a]));
   const Store = window.CinelabStore;
@@ -62,6 +64,35 @@
     setTimeout(() => el.remove(), 4700);
   }
 
+  function isAdmin() { return Boolean(state.user && state.user.isAdmin); }
+
+  function ratingForm(i) {
+    return `
+      <form class="rating-form" data-id="${esc(i.id)}">
+        <input type="text" inputmode="decimal" name="rating" maxlength="4" value="${i.rating != null ? String(i.rating).replace(".", ",") : ""}" placeholder="0 a 10" aria-label="Puntaje del equipo para ${esc(i.titulo)}">
+        <button class="btn btn-small" type="submit">Guardar</button>
+        ${i.rating != null ? `<button class="link-btn danger" type="button" data-action="clear-team-rating" data-id="${esc(i.id)}">Quitar</button>` : ""}
+      </form>`;
+  }
+
+  async function saveTeamRating(itemId, rating) {
+    try {
+      await Store.setTeamRating(itemId, rating);
+      toast(rating === null ? "Se quitó el puntaje del equipo." : `Puntaje del equipo actualizado: ★ ${rating}`);
+      await reload();
+    } catch (err) { toast(esc(err.message), "error"); }
+  }
+
+  // Formularios de puntaje (ficha y panel admin), por delegación.
+  document.addEventListener("submit", e => {
+    const form = e.target.closest(".rating-form");
+    if (!form) return;
+    e.preventDefault();
+    const raw = form.rating.value.trim().replace(",", ".");
+    if (raw === "") return toast("Escribí un puntaje de 0 a 10.", "error");
+    saveTeamRating(form.dataset.id, Math.round(Number(raw) * 10) / 10);
+  });
+
   function requireLogin(message) {
     if (state.user) return true;
     openAuth("login", message || "Ingresá para usar esta función.");
@@ -70,6 +101,10 @@
 
   // ------------------------------------------------------------------- datos
   async function reload() {
+    try {
+      const overrides = await Store.getTeamRatings();
+      items.forEach(i => { i.rating = i.id in overrides ? overrides[i.id] : i.ratingBase; });
+    } catch (e) { /* se usan los puntajes de data.js */ }
     try {
       state.reviews = await Store.listReviews();
       state.watchlist = await Store.getWatchlist();
@@ -105,7 +140,7 @@
     box.innerHTML = `
       <a class="user-chip" href="#/perfil" title="Mi perfil y medallas">
         <span class="avatar">${initials(state.user.username)}</span>
-        <span class="user-chip-text"><strong>${esc(state.user.username)}</strong><small>${esc(p.level.name)} · ${p.xp} XP</small></span>
+        <span class="user-chip-text"><strong>${esc(state.user.username)}</strong><small>${isAdmin() ? "Admin · " : ""}${esc(p.level.name)} · ${p.xp} XP</small></span>
       </a>`;
   }
 
@@ -126,7 +161,7 @@
     document.title = "CineLab — Reseñas de cine y series";
     const views = {
       inicio: viewHome, catalogo: viewCatalog, titulo: viewTitle, resenas: viewReviews,
-      articulos: viewArticles, articulo: viewArticle, ranking: viewRanking, perfil: viewProfile, usuario: viewProfile, medallas: viewMedalsInfo, contacto: viewContact
+      articulos: viewArticles, articulo: viewArticle, ranking: viewRanking, admin: viewAdmin, perfil: viewProfile, usuario: viewProfile, medallas: viewMedalsInfo, contacto: viewContact
     };
     (views[page] || viewNotFound)(arg);
   }
@@ -352,7 +387,8 @@
           </div>
         </div>
         <aside class="scores">
-          <div class="score"><span class="score-num">${i.rating != null ? esc(i.rating) : "–"}</span><span class="score-label">Equipo CineLab${i.rating != null ? "" : " · sin puntaje"}</span></div>
+          <div class="score" id="teamScore"><span class="score-num">${i.rating != null ? esc(i.rating) : "–"}</span><span class="score-label">Equipo CineLab${i.rating != null ? "" : " · sin puntaje"}</span>
+            ${isAdmin() ? `<button class="link-btn admin-edit" data-action="edit-team-rating" data-id="${esc(i.id)}">✏️ Editar puntaje</button>` : ""}</div>
           <div class="score"><span class="score-num">${community || "–"}</span><span class="score-label">Comunidad · ${list.length} ${list.length === 1 ? "reseña" : "reseñas"}</span></div>
         </aside>
       </section>
@@ -501,6 +537,32 @@
         </section>` : ""}`;
   }
 
+  // -------------------------------------------------------------------- admin
+  function viewAdmin() {
+    if (!isAdmin()) {
+      app.innerHTML = `<section class="page-head"><h1>Panel de administración</h1><p>Esta sección es solo para administradores de CineLab.</p>
+        ${state.user ? "" : `<button class="btn" data-action="open-auth">Ingresar</button>`}</section>`;
+      return;
+    }
+    const cats = Object.keys(categorias);
+    app.innerHTML = `
+      <section class="page-head">
+        <h1>Panel de administración</h1>
+        <p>Editá el puntaje del equipo (de 0 a 10). “Quitar” deja el título sin puntaje del equipo; se usa el de la comunidad.</p>
+      </section>
+      ${cats.map(c => `
+        <section class="section">
+          <h2>${esc(c)}</h2>
+          <div class="admin-list">
+            ${items.filter(i => i.categoria === c).map(i => `
+              <div class="admin-row">
+                <a href="#/titulo/${esc(i.id)}"><strong>${esc(i.titulo)}</strong><small>${esc(i.tipo)} · ${esc(i.anio)} · comunidad ${communityScore(i.id) || "–"}</small></a>
+                ${ratingForm(i)}
+              </div>`).join("")}
+          </div>
+        </section>`).join("")}`;
+  }
+
   // ------------------------------------------------------------------ ranking
   function viewRanking() {
     const users = {};
@@ -556,7 +618,10 @@
           <div class="bar"><span style="width:${Math.round(p.level.progress * 100)}%"></span></div>
           <small class="muted">${p.level.next ? `Te faltan ${p.level.toNext} XP para ser ${esc(p.level.next)}` : "¡Llegaste al nivel máximo!"}</small>
         </div>
-        ${own ? `<button class="btn btn-ghost btn-small" data-action="logout">Cerrar sesión</button>` : ""}
+        ${own ? `<div class="profile-actions">
+          ${isAdmin() ? `<a class="btn btn-small" href="#/admin">Panel de administración</a>` : ""}
+          <button class="btn btn-ghost btn-small" data-action="logout">Cerrar sesión</button>
+        </div>` : ""}
       </section>
 
       <div class="stats">
@@ -707,6 +772,14 @@
     random: () => { const i = items[Math.floor(Math.random() * items.length)]; location.hash = "#/titulo/" + i.id; },
     "reviews-cat": el => { state.resenas.cat = el.dataset.cat; render(); },
     "reviews-order": el => { state.resenas.orden = el.dataset.order; render(); },
+    "edit-team-rating": el => {
+      const box = $("#teamScore");
+      box.innerHTML = `<span class="score-label">Puntaje del equipo (0 a 10)</span>${ratingForm(itemsById[el.dataset.id])}`;
+      box.querySelector("input").focus();
+    },
+    "clear-team-rating": el => {
+      if (confirm("¿Quitar el puntaje del equipo de este título?")) saveTeamRating(el.dataset.id, null);
+    },
     "articles-tag": el => { state.articulos.tag = el.dataset.tag; render(); },
     "edit-review": el => {
       const target = "#/titulo/" + el.dataset.item;

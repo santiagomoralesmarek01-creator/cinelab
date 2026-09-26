@@ -53,7 +53,11 @@
     return "x" + h;
   }
 
-  function publicUser(u) { return u ? { id: u.id, email: u.email, username: u.username } : null; }
+  function publicUser(u) { return u ? { id: u.id, email: u.email, username: u.username, isAdmin: Boolean(u.isAdmin) } : null; }
+
+  function validateTeamRating(rating) {
+    if (rating !== null && !(rating >= 0 && rating <= 10)) throw new Error("El puntaje tiene que estar entre 0 y 10.");
+  }
 
   const local = {
     mode: "demo",
@@ -67,7 +71,8 @@
       const users = LS.get("users", []);
       if (users.some(u => u.email === email)) throw new Error("Ya existe una cuenta con ese email.");
       if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) throw new Error("Ese nombre de usuario ya está en uso.");
-      const user = { id: uid(), email, username, pass: await hash(email + ":" + password), createdAt: new Date().toISOString() };
+      // En modo demo la primera cuenta creada en el navegador es la administradora.
+      const user = { id: uid(), email, username, pass: await hash(email + ":" + password), isAdmin: users.length === 0, createdAt: new Date().toISOString() };
       users.push(user);
       LS.set("users", users);
       LS.set("session", user.id);
@@ -130,6 +135,16 @@
       const list = LS.get("watch:" + current.id, []).filter(i => i !== itemId);
       if (inList) list.push(itemId);
       LS.set("watch:" + current.id, list);
+    },
+    async getTeamRatings() {
+      return LS.get("teamRatings", {});
+    },
+    async setTeamRating(itemId, rating) {
+      if (!current || !current.isAdmin) throw new Error("Solo un administrador puede cambiar el puntaje del equipo.");
+      validateTeamRating(rating);
+      const all = LS.get("teamRatings", {});
+      all[itemId] = rating; // null = sin puntaje del equipo
+      LS.set("teamRatings", all);
     }
   };
 
@@ -149,8 +164,14 @@
   async function userFromSession(session) {
     if (!session) return null;
     const u = session.user;
-    const { data } = await sb.from("profiles").select("username").eq("id", u.id).maybeSingle();
-    return { id: u.id, email: u.email, username: (data && data.username) || (u.user_metadata && u.user_metadata.username) || u.email.split("@")[0] };
+    let res = await sb.from("profiles").select("username, is_admin").eq("id", u.id).maybeSingle();
+    // Si todavía no se ejecutó supabase/admin.sql no existe la columna is_admin.
+    if (res.error) res = await sb.from("profiles").select("username").eq("id", u.id).maybeSingle();
+    const data = res.data;
+    return {
+      id: u.id, email: u.email, isAdmin: Boolean(data && data.is_admin),
+      username: (data && data.username) || (u.user_metadata && u.user_metadata.username) || u.email.split("@")[0]
+    };
   }
 
   function check({ error }) {
@@ -241,6 +262,19 @@
       check(inList
         ? await sb.from("watchlist").insert({ user_id: current.id, item_id: itemId })
         : await sb.from("watchlist").delete().eq("user_id", current.id).eq("item_id", itemId));
+    },
+    async getTeamRatings() {
+      const res = await sb.from("team_ratings").select("item_id, rating");
+      if (res.error) return {}; // tabla sin crear: se usan los puntajes de data.js
+      return Object.fromEntries(res.data.map(r => [r.item_id, r.rating === null ? null : Number(r.rating)]));
+    },
+    async setTeamRating(itemId, rating) {
+      if (!current || !current.isAdmin) throw new Error("Solo un administrador puede cambiar el puntaje del equipo.");
+      validateTeamRating(rating);
+      // rating null se guarda igual: significa "sin puntaje del equipo".
+      check(await sb.from("team_ratings").upsert(
+        { item_id: itemId, rating, updated_by: current.id, updated_at: new Date().toISOString() },
+        { onConflict: "item_id" }));
     }
   };
 

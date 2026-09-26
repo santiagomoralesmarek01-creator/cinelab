@@ -42,6 +42,16 @@ en el mismo navegador.
    “Confirm email” para que las cuentas se activen sin confirmar el correo (práctico para la presentación).
 5. En **Authentication → URL Configuration** poné como *Site URL* la dirección donde publiques el sitio.
 
+### Administradores (puntaje del equipo)
+
+1. Ejecutá también [`supabase/admin.sql`](supabase/admin.sql) en el SQL Editor.
+2. Para nombrar admin a una cuenta ya creada, ejecutá (con su nombre de usuario):
+   `update public.profiles set is_admin = true where username = 'Elpibedeoft';`
+3. Al volver a ingresar, esa persona ve “✏️ Editar puntaje” en cada ficha y el **Panel de administración**
+   en su perfil (`#/admin`), donde puede cambiar o quitar el puntaje del equipo de todos los títulos.
+
+En modo demo, la primera cuenta creada en el navegador es la administradora.
+
 La anon key es pública por diseño; quién puede leer o modificar qué lo controlan las políticas RLS del schema
 (por ejemplo, nadie puede editar la reseña de otra persona ni darse like a sí mismo).
 
