@@ -3,6 +3,8 @@
 
   const { items, categorias } = window.CINELAB_DATA;
   const itemsById = Object.fromEntries(items.map(i => [i.id, i]));
+  const articulos = window.CINELAB_ARTICULOS || [];
+  const articulosById = Object.fromEntries(articulos.map(a => [a.id, a]));
   const Store = window.CinelabStore;
   const Ach = window.CinelabAchievements;
 
@@ -12,6 +14,7 @@
     watchlist: [],
     catalogo: { q: "", cat: "Todas", tipo: "Todos", anio: "Todos", min: "0", orden: "rating" },
     resenas: { cat: "Todas", orden: "recientes" },
+    articulos: { tag: "Todos" },
     authTab: "login"
   };
 
@@ -119,10 +122,11 @@
 
   function render() {
     const { page, arg } = currentRoute();
-    setActiveNav(page);
+    setActiveNav(page === "articulo" ? "articulos" : page === "titulo" ? "catalogo" : page);
+    document.title = "CineLab — Reseñas de cine y series";
     const views = {
       inicio: viewHome, catalogo: viewCatalog, titulo: viewTitle, resenas: viewReviews,
-      ranking: viewRanking, perfil: viewProfile, usuario: viewProfile, medallas: viewMedalsInfo, contacto: viewContact
+      articulos: viewArticles, articulo: viewArticle, ranking: viewRanking, perfil: viewProfile, usuario: viewProfile, medallas: viewMedalsInfo, contacto: viewContact
     };
     (views[page] || viewNotFound)(arg);
   }
@@ -169,6 +173,30 @@
       </article>`;
   }
 
+  // Convierte [[id]] y [[id|texto]] en enlaces a la ficha. Se aplica después de escapar.
+  function richText(text) {
+    return esc(text).replace(/\[\[([a-z0-9-]+)(?:\|([^\]]+))?\]\]/g, (m, id, label) => {
+      const it = itemsById[id];
+      if (!it) return label || id;
+      return `<a href="#/titulo/${id}">${label || esc(it.titulo)}</a>`;
+    });
+  }
+
+  function articlesAbout(itemId) {
+    return articulos.filter(a => (a.titulos || []).includes(itemId));
+  }
+
+  function articleCard(a) {
+    const words = a.cuerpo.flat().join(" ").split(/\s+/).length;
+    return `
+      <a class="article-card" href="#/articulo/${esc(a.id)}">
+        <p class="cat">${a.etiquetas.map(esc).join(" · ")}</p>
+        <h3>${esc(a.titulo)}</h3>
+        <p class="snippet">${esc(a.bajada)}</p>
+        <p class="card-foot">${Math.max(1, Math.round(words / 200))} min de lectura${a.titulos && a.titulos.length ? ` · ${a.titulos.length} ${a.titulos.length === 1 ? "título citado" : "títulos citados"}` : ""}</p>
+      </a>`;
+  }
+
   function emptyReviews(text) {
     return `<div class="empty"><p>${text}</p>${state.user ? `<a class="btn" href="#/catalogo">Elegí un título para reseñar</a>`
       : `<button class="btn" data-action="open-auth" data-tab="signup">Creá tu cuenta y empezá a sumar medallas</button>`}</div>`;
@@ -206,6 +234,12 @@
             </a></li>`).join("")}
         </ol>
       </section>
+
+      ${articulos.length ? `
+      <section class="section">
+        <div class="section-head"><h2>Artículos</h2><a href="#/articulos">Ver todos →</a></div>
+        <div class="grid">${articulos.slice(0, 3).map(articleCard).join("")}</div>
+      </section>` : ""}
 
       <section class="section join">
         <div>
@@ -291,6 +325,7 @@
         <h2>${esc(info.titulo)}</h2>
         <p>${esc(info.intro)}</p>
         ${info.recomendacion ? `<h3>Recomendación para un fin de semana</h3><ul>${info.recomendacion.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
+        ${articulos.filter(a => a.etiquetas.includes(f.cat)).map(a => `<p><a href="#/articulo/${esc(a.id)}">Leer el artículo: ${esc(a.titulo)} →</a></p>`).join("")}
       </aside>` : "";
   }
 
@@ -323,6 +358,12 @@
       </section>
 
       ${i.resenaEquipo ? `<section class="team-review"><h2>La reseña del equipo</h2><p>${esc(i.resenaEquipo)}</p></section>` : ""}
+
+      ${articlesAbout(i.id).length ? `
+      <section class="section">
+        <h2>Artículos que la mencionan</h2>
+        <div class="grid">${articlesAbout(i.id).map(articleCard).join("")}</div>
+      </section>` : ""}
 
       <section class="section" id="reviewForm">
         <h2>${mine ? "Tu reseña" : "Escribí tu reseña"}</h2>
@@ -409,6 +450,55 @@
       </div>
       ${list.length ? `<div class="reviews">${list.map(r => reviewCard(r, { showItem: true })).join("")}</div>`
         : emptyReviews(state.reviews.length ? "No hay reseñas en esta categoría todavía." : "Todavía nadie publicó una reseña. ¡La primera se lleva la medalla Pionero!")}`;
+  }
+
+  // ---------------------------------------------------------------- artículos
+  function viewArticles() {
+    const f = state.articulos;
+    const tags = ["Todos"].concat(Array.from(new Set(articulos.flatMap(a => a.etiquetas))));
+    if (!tags.includes(f.tag)) f.tag = "Todos";
+    const list = articulos.filter(a => f.tag === "Todos" || a.etiquetas.includes(f.tag));
+    app.innerHTML = `
+      <section class="page-head">
+        <h1>Artículos</h1>
+        <p>Notas y opiniones sobre cine, series y sus géneros: rankings, análisis de actuaciones y lo que nos dejan las historias.</p>
+      </section>
+      <div class="controls chips">
+        ${tags.map(t => `<button class="chip${t === f.tag ? " active" : ""}" data-action="articles-tag" data-tag="${esc(t)}">${esc(t)}</button>`).join("")}
+      </div>
+      ${list.length ? `<div class="grid">${list.map(articleCard).join("")}</div>` : `<p class="muted">Todavía no hay artículos.</p>`}`;
+  }
+
+  function viewArticle(id) {
+    const a = articulosById[id];
+    if (!a) return viewNotFound();
+    const cited = (a.titulos || []).map(t => itemsById[t]).filter(Boolean);
+    const others = articulos.filter(x => x !== a).slice(0, 3);
+    const block = b => Array.isArray(b)
+      ? `<ul>${b.map(li => `<li>${richText(li)}</li>`).join("")}</ul>`
+      : b.startsWith("## ") ? `<h2>${richText(b.slice(3))}</h2>` : `<p>${richText(b)}</p>`;
+    document.title = a.titulo + " — CineLab";
+    app.innerHTML = `
+      <nav class="crumbs"><a href="#/articulos">Artículos</a> / <span>${a.etiquetas.map(esc).join(" · ")}</span></nav>
+      <article class="article">
+        <header>
+          <p class="cat">${a.etiquetas.map(esc).join(" · ")}</p>
+          <h1>${esc(a.titulo)}</h1>
+          <p class="lead">${esc(a.bajada)}</p>
+          ${a.autor ? `<p class="meta">Por ${esc(a.autor)}</p>` : ""}
+        </header>
+        <div class="article-body">${a.cuerpo.map(block).join("")}</div>
+      </article>
+      ${cited.length ? `
+        <section class="section">
+          <h2>Títulos citados</h2>
+          <div class="grid">${cited.map(card).join("")}</div>
+        </section>` : ""}
+      ${others.length ? `
+        <section class="section">
+          <h2>Más artículos</h2>
+          <div class="grid">${others.map(articleCard).join("")}</div>
+        </section>` : ""}`;
   }
 
   // ------------------------------------------------------------------ ranking
@@ -617,6 +707,7 @@
     random: () => { const i = items[Math.floor(Math.random() * items.length)]; location.hash = "#/titulo/" + i.id; },
     "reviews-cat": el => { state.resenas.cat = el.dataset.cat; render(); },
     "reviews-order": el => { state.resenas.orden = el.dataset.order; render(); },
+    "articles-tag": el => { state.articulos.tag = el.dataset.tag; render(); },
     "edit-review": el => {
       const target = "#/titulo/" + el.dataset.item;
       if (location.hash !== target) location.hash = target;

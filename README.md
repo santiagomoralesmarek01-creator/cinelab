@@ -10,6 +10,7 @@ Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni co
 - **Inicio**: recomendados, Top 3 de terror 2025, últimas reseñas y botón **🎲 ¿Qué veo hoy?** (elige un título al azar).
 - **Catálogo**: buscador y filtros por categoría, tipo (película/serie), año y valoración, más orden por puntaje, año, cantidad de reseñas o A–Z. Cada categoría muestra su texto introductorio.
 - **Ficha de cada título**: sinopsis, reparto, puntaje del equipo y de la comunidad, la reseña del equipo, un link al tráiler y las reseñas de los usuarios.
+- **Artículos**: notas de opinión sobre cine, series y géneros (Marvel, Cris Morena, thrillers, Top 3 de terror), con enlaces a las fichas que citan. Cada ficha muestra los artículos que la mencionan.
 - **Reseñas**: todas las reseñas de la comunidad, filtrables por categoría y ordenables por más recientes o más valoradas.
 - **Login opcional**: el sitio se puede ver completo sin cuenta. La cuenta sirve para:
   - publicar, editar y borrar reseñas (1 a 5 estrellas, una por título),
@@ -60,6 +61,7 @@ index.html            estructura de la página
 css/styles.css        estilos (paleta, tipografías y versión celular)
 js/config.js          datos de conexión a Supabase (vacío = modo demo)
 js/data.js            catálogo de películas y series  ← acá se agregan títulos
+js/articles.js        artículos                       ← acá se agregan notas
 js/store.js           login, reseñas, likes y lista (demo o Supabase)
 js/achievements.js    medallas, XP y niveles
 js/app.js             pantallas y navegación
@@ -72,6 +74,11 @@ Sumá un objeto a `items` en `js/data.js` con un `id` único (minúsculas y guio
 El resto (catálogo, filtros, ficha, reseñas) se actualiza solo.
 Si el equipo todavía no le puso puntaje, usá `rating: null`: se ordena y filtra con el promedio de la comunidad.
 Para una categoría nueva, agregala también en `categorias` con su título e introducción.
+
+### Agregar un artículo
+
+Sumá un objeto a `js/articles.js`. Las instrucciones de formato están al principio del archivo:
+párrafos, subtítulos con `## `, listas, y `[[id-del-titulo]]` para enlazar una ficha del catálogo.
 
 ## Equipo
 

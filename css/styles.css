@@ -145,6 +145,25 @@ input:focus, textarea:focus, select:focus, button:focus-visible, a:focus-visible
 .cat-intro h3 { font-size: 16px; margin: 18px 0 6px; }
 .cat-intro p, .cat-intro li { color: var(--cream-dim); font-size: 15px; }
 
+/* ---------- artículos ---------- */
+.article-card {
+  display: flex; flex-direction: column; background: var(--bg-alt); border: 1px solid var(--line);
+  border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 20px;
+  text-decoration: none; color: inherit; transition: border-color .15s, transform .15s;
+}
+.article-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+.article-card h3 { font-size: 20px; margin: 0 0 8px; line-height: 1.25; }
+.article { max-width: 720px; margin: 0 auto; padding-top: 18px; }
+.article h1 { font-size: 42px; line-height: 1.1; margin: 4px 0 14px; }
+.article .lead { font-size: 19px; color: var(--cream-dim); margin: 0 0 10px; }
+.article-body { margin-top: 30px; border-top: 1px solid var(--line); padding-top: 10px; }
+.article-body p, .article-body li { font-size: 17px; line-height: 1.75; color: var(--cream); }
+.article-body h2 { font-size: 24px; margin: 34px 0 6px; }
+.article-body ul { padding-left: 22px; }
+.article-body li { margin-bottom: 8px; }
+.article-body li::marker { color: var(--gold); }
+.article-body a { text-decoration-color: rgba(201, 151, 46, .5); text-underline-offset: 3px; }
+
 /* ---------- ficha ---------- */
 .title-page { display: flex; gap: 40px; padding: 20px 0 10px; align-items: flex-start; }
 .title-main { flex: 1; }
@@ -285,7 +304,9 @@ input:focus, textarea:focus, select:focus, button:focus-visible, a:focus-visible
   .site-header, .site-footer { padding-left: 16px; padding-right: 16px; }
   .hero { padding-top: 40px; }
   .hero h1 { font-size: 32px; }
-  .page-head h1, .title-main h1 { font-size: 30px; }
+  .page-head h1, .title-main h1, .article h1 { font-size: 30px; }
+  .article .lead { font-size: 17px; }
+  .article-body p, .article-body li { font-size: 16px; }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .filters label { max-width: none; min-width: 45%; }
   .rank-medals { display: none; }

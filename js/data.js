@@ -21,7 +21,7 @@ window.CINELAB_DATA = {
     },
     "Series de Marvel": {
       titulo: "Marvel: por qué sus series siguen conquistando al público",
-      intro: "Cuando pensamos en Marvel, lo primero que se nos viene a la cabeza son sus grandes películas. Sin embargo, las series se convirtieron en una parte fundamental de este universo: desde Daredevil y Jessica Jones hasta WandaVision, Loki, Moon Knight y Ms. Marvel, Marvel encontró en la televisión y el streaming una manera diferente de contar sus historias y de acercarnos mucho más a sus personajes. ¿Por qué son tan buenas? Porque no dependen únicamente de los superpoderes: lo interesante está en los personajes, sus conflictos, sus vínculos y las decisiones que tienen que tomar. Marvel se anima a experimentar con distintos géneros —drama, comedia, ciencia ficción, fantasía, acción y misterio— y las series permiten acompañar a los personajes durante más tiempo, entender sus motivaciones y ver cómo cambian. Detrás de cada traje, cada poder y cada batalla hay una historia humana capaz de generar identificación."
+      intro: "Desde Daredevil y Jessica Jones hasta WandaVision, Loki, Moon Knight y Ms. Marvel, Marvel encontró en la televisión y el streaming una manera diferente de contar sus historias y de acercarnos mucho más a sus personajes. Lo interesante no son solo los superpoderes, sino los personajes, sus conflictos y las decisiones que tienen que tomar."
     }
   },
 
