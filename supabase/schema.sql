@@ -36,9 +36,9 @@ create table public.watchlist (
 create index reviews_item_idx on public.reviews (item_id);
 create index review_likes_user_idx on public.review_likes (user_id);
 
--- Crea el perfil automáticamente al registrarse. Con email se usa el username
--- elegido; con Google, el comienzo del email. Si el nombre ya existe se le
--- agrega un número para que no choque.
+-- Crea el perfil automáticamente al registrarse con el username elegido.
+-- Si faltara o ya existiera, se arma uno a partir del email con un número
+-- al final para que no choque.
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql

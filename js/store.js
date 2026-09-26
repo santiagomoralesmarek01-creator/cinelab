@@ -166,7 +166,8 @@
     mode: "supabase",
     async init() {
       await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");
-      // PKCE devuelve el código en "?code=" y no en el "#", que usa el router del sitio.
+      // PKCE: el link de confirmación de email vuelve con "?code=" y no con "#",
+      // que es lo que usa el router del sitio.
       sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, { auth: { flowType: "pkce" } });
       const { data } = await sb.auth.getSession();
       current = await userFromSession(data.session);
@@ -195,15 +196,6 @@
       check(res);
       current = await userFromSession(res.data.session);
       emit();
-    },
-    async signInWithGoogle() {
-      if (location.protocol === "file:") {
-        throw new Error("El login con Google necesita que el sitio esté publicado o en un servidor local (no funciona abriendo el archivo directo).");
-      }
-      check(await sb.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: location.origin + location.pathname }
-      }));
     },
     async signOut() {
       await sb.auth.signOut();

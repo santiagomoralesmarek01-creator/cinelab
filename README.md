@@ -44,33 +44,14 @@ en el mismo navegador.
 La anon key es pública por diseño; quién puede leer o modificar qué lo controlan las políticas RLS del schema
 (por ejemplo, nadie puede editar la reseña de otra persona ni darse like a sí mismo).
 
-### Login con Google (opcional)
-
-El botón **Continuar con Google** aparece solo cuando Supabase está conectado, y funciona con el
-sitio publicado o en un servidor local (no abriendo `index.html` con doble click).
-
-1. En [Google Cloud Console](https://console.cloud.google.com) creá un proyecto (ej. `CineLab`).
-2. **Google Auth Platform → Branding**: nombre de la app `CineLab`, email de soporte y de contacto.
-   En **Audience** elegí *External* y agregá como *Test users* los Gmail que van a probar
-   (o tocá *Publish app* para que entre cualquiera). En **Data Access** alcanza con `openid`, `email` y `profile`.
-3. **Google Auth Platform → Clients → Create client**, tipo **Web application**:
-   - *Authorized JavaScript origins*: la dirección del sitio publicado
-     (ej. `https://<tu-usuario>.github.io`) y, para probar en tu compu, `http://localhost:5500`.
-   - *Authorized redirect URIs*: `https://kiedpmiesanlnwtucdrj.supabase.co/auth/v1/callback`
-4. Copiá el **Client ID** y el **Client Secret** y pegalos en Supabase:
-   **Authentication → Sign In / Providers → Google** → activar → *Save*.
-   El Client Secret es privado: va solo en Supabase, nunca en el código del sitio.
-5. En Supabase, **Authentication → URL Configuration**: *Site URL* con la dirección del sitio y, en
-   *Redirect URLs*, esa misma dirección seguida de `**` (y `http://localhost:5500/**` para probar).
-6. Si ya habías ejecutado `schema.sql` antes, ejecutá también `supabase/google-login.sql`
-   (le arma un nombre de usuario a quienes entran con Google).
-
-Para probar localmente: `python3 -m http.server 5500` dentro de la carpeta y abrí `http://localhost:5500`.
-
 ## Publicarlo gratis
 
-Al ser un sitio estático se puede subir a **GitHub Pages** (Settings → Pages → rama `main`, carpeta raíz),
-Netlify o Vercel sin configuración.
+Al ser un sitio estático se sube a **Vercel** sin configuración: *Add New → Project*, elegir este repo,
+Framework Preset **Other** y *Deploy*. Cada cambio en `main` se publica solo.
+Después, en Supabase (**Authentication → URL Configuration**) poner la dirección de Vercel como *Site URL*
+y en *Redirect URLs* la misma dirección seguida de `/**`, para que funcionen los links de confirmación por email.
+
+Para probarlo en tu compu con Supabase: `python3 -m http.server 5500` dentro de la carpeta y abrir `http://localhost:5500`.
 
 ## Estructura
 

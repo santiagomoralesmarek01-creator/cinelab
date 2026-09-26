@@ -245,9 +245,6 @@ input:focus, textarea:focus, select:focus, button:focus-visible, a:focus-visible
 .tabs button { flex: 1; background: none; border: none; border-bottom: 2px solid transparent; color: var(--cream-dim); padding: 10px; cursor: pointer; font-size: 15px; font-family: 'Oswald', sans-serif; letter-spacing: .04em; }
 .tabs button.active { color: var(--gold); border-bottom-color: var(--gold); }
 .auth-form { display: grid; gap: 14px; }
-.btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #1f1f1f; border-color: #fff; }
-.divider { display: flex; align-items: center; gap: 12px; color: var(--cream-dim); font-size: 12px; margin: 18px 0; }
-.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 .notice { background: var(--gold-soft); color: var(--cream); padding: 10px 14px; border-radius: 8px; font-size: 14px; }
 .small-print { font-size: 12px; margin: 18px 0 0; }
 
