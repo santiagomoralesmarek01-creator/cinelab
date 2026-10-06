@@ -5,6 +5,12 @@ Proyecto del Laboratorio de Medios Gráficos (UMET).
 
 Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni compilar.
 
+**Demo:** <https://cinelab-peach.vercel.app/>
+
+![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?logo=javascript&logoColor=black)
+![Supabase](https://img.shields.io/badge/Supabase-Auth%20%2B%20Postgres-3ECF8E?logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/deploy-Vercel-000000?logo=vercel&logoColor=white)
+
 ## Qué incluye
 
 - **Inicio**: recomendados, Top 3 de terror 2025, últimas reseñas y botón **🎲 ¿Qué veo hoy?** (elige un título al azar).
