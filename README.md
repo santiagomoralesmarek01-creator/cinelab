@@ -41,6 +41,9 @@ en el mismo navegador.
 
 ## Conectar Supabase (cuentas y reseñas compartidas por todos)
 
+> **Atajo para un proyecto nuevo:** [`supabase/instalar-todo.sql`](supabase/instalar-todo.sql) junta
+> `schema.sql`, `admin.sql` y `fotos.sql` en un solo archivo. Pegalo entero en el SQL Editor y ejecutalo una vez.
+
 1. Creá un proyecto gratis en [supabase.com](https://supabase.com).
 2. En **SQL Editor**, pegá y ejecutá el contenido de [`supabase/schema.sql`](supabase/schema.sql).
    Crea las tablas `profiles`, `reviews`, `review_likes` y `watchlist` con sus reglas de seguridad (RLS).
