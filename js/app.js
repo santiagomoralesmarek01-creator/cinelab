@@ -77,10 +77,6 @@
   function articlePhoto(a) { return safeImg(state.content["img:article:" + a.id]); }
   function articleAuthorRaw(a) { return state.content["author:article:" + a.id] || a.autor || ""; }
   function articleAuthor(a) { return articleAuthorRaw(a) || "Equipo CineLab"; }
-  // Firmas con nombre y apellido: reseñas del equipo (de cada ficha) y reseñas
-  // publicadas desde una cuenta admin compartida, como la del equipo.
-  function teamReviewSigner(i) { return state.content["author:item:" + i.id] || ""; }
-  function reviewSigner(r) { return state.content["author:review:" + r.id] || ""; }
 
   function catHue(cat) { return [28, 350, 265, 210, 150, 45][Math.max(0, catNames.indexOf(cat)) % 6]; }
 
@@ -328,9 +324,7 @@
         <header class="review-head">
           ${avatar(r.username, r.avatarUrl, { href: "#/usuario/" + esc(r.userId) })}
           <div>
-            ${reviewSigner(r)
-              ? `<span class="review-user">✍️ ${esc(reviewSigner(r))}</span> <a class="review-account" href="#/usuario/${esc(r.userId)}">desde la cuenta ${esc(r.username)}</a>`
-              : `<a class="review-user" href="#/usuario/${esc(r.userId)}">${esc(r.username)}</a>`}
+            <a class="review-user" href="#/usuario/${esc(r.userId)}">${esc(r.username)}</a>
             <p class="meta">${stars(r.rating)} · ${fmtDate(r.createdAt)}${r.updatedAt ? " · editada" : ""}</p>
           </div>
         </header>
@@ -341,7 +335,6 @@
           ${mine
             ? `<span class="like-count">❤️ ${r.likes.length}</span>
                <button class="link-btn" data-action="edit-review" data-item="${esc(r.itemId)}">Editar</button>
-               ${isAdmin() ? `<button class="link-btn" data-action="review-sign" data-id="${esc(r.id)}">✍️ ${reviewSigner(r) ? "Cambiar firma" : "Firmar"}</button>` : ""}
                <button class="link-btn danger" data-action="delete-review" data-id="${esc(r.id)}">Borrar</button>`
             : `<button class="like-btn${liked ? " liked" : ""}${state.popLike === r.id ? " pop" : ""}" data-action="like" data-id="${esc(r.id)}" aria-pressed="${liked ? "true" : "false"}">
                  <span class="heart">${liked ? "❤️" : "🤍"}</span> <span>${r.likes.length}</span>
@@ -598,16 +591,7 @@
         </aside>
       </section>
 
-      ${i.resenaEquipo ? `
-      <section class="team-review">
-        <h2>La reseña del equipo</h2>
-        <p>${esc(i.resenaEquipo)}</p>
-        ${teamReviewSigner(i) || isAdmin() ? `
-          <footer class="team-sign">
-            ${teamReviewSigner(i) ? `<span class="signature-name">${esc(teamReviewSigner(i))}</span>` : ""}
-            ${isAdmin() ? `<button class="link-btn" data-action="team-review-sign" data-id="${esc(i.id)}">✍️ ${teamReviewSigner(i) ? "Cambiar firma" : "Firmar esta reseña"}</button>` : ""}
-          </footer>` : ""}
-      </section>` : ""}
+      ${i.resenaEquipo ? `<section class="team-review"><h2>La reseña del equipo</h2><p>${esc(i.resenaEquipo)}</p></section>` : ""}
 
       ${photos.length ? `
       <section class="section">
@@ -789,39 +773,26 @@
         </section>` : ""}`;
   }
 
-  // Firma con nombre y apellido. kind: "article" | "item" (reseña del equipo) | "review".
-  const SIGN = {
-    article: { title: "Firmar artículo", name: id => (articulosById[id] || {}).titulo, empty: "Si lo dejás vacío, el artículo se firma como “Equipo CineLab”." },
-    item: { title: "Firmar la reseña del equipo", name: id => (itemsById[id] || {}).titulo, empty: "Si lo dejás vacío, la reseña queda sin firma." },
-    review: { title: "Firmar reseña", name: id => { const r = state.reviews.find(x => x.id === id); return r && itemsById[r.itemId] ? "Reseña de " + itemsById[r.itemId].titulo : ""; }, empty: "Si lo dejás vacío, se muestra el nombre de la cuenta." }
-  };
-
-  function openSignModal(kind, id) {
-    const cfg = SIGN[kind];
-    const key = "author:" + kind + ":" + id;
-    const current = kind === "article" ? articleAuthorRaw(articulosById[id] || {}) : (state.content[key] || "");
+  function openSignModal(id) {
+    const a = articulosById[id];
+    if (!a) return;
     openModal(`
-      <h2>${cfg.title}</h2>
-      <p class="muted">${esc(cfg.name(id) || "")}</p>
+      <h2>Firmar artículo</h2>
+      <p class="muted">${esc(a.titulo)}</p>
       <form id="signForm" class="auth-form">
-        <label>Nombre y apellido de quien la escribió
-          <input name="autor" list="teamNames" maxlength="80" value="${esc(current)}" placeholder="ej: Rocío Stagno" autocomplete="off">
+        <label>Firma (quién lo escribió)
+          <input name="autor" list="teamNames" maxlength="80" value="${esc(articleAuthorRaw(a))}" placeholder="ej: Rocío Stagno">
         </label>
         <datalist id="teamNames">${(equipo || []).map(n => `<option value="${esc(n)}">`).join("")}</datalist>
-        <p class="form-error" id="signError"></p>
         <button class="btn btn-block" type="submit">Guardar firma</button>
       </form>
-      <p class="muted small-print">${cfg.empty}</p>`);
+      <p class="muted small-print">Si lo dejás vacío, el artículo se firma como “Equipo CineLab”.</p>`);
     $("#signForm input").focus();
     $("#signForm").addEventListener("submit", async e => {
       e.preventDefault();
-      const value = e.target.autor.value.trim().replace(/\s+/g, " ");
-      if (value && value.split(" ").length < 2) {
-        $("#signError").textContent = "Escribí nombre y apellido.";
-        return;
-      }
+      const value = e.target.autor.value.trim();
       closeModal();
-      await runAndReload(() => Store.setSiteContent(key, value || null), value ? "Firma guardada." : "Se quitó la firma.");
+      await runAndReload(() => Store.setSiteContent("author:article:" + id, value || null), "Firma guardada.");
     });
   }
 
@@ -847,7 +818,6 @@
                 ${poster(i, "poster-thumb")}
                 <a class="admin-name" href="#/titulo/${esc(i.id)}"><strong>${esc(i.titulo)}</strong><small>${esc(i.tipo)} · ${esc(i.anio)} · comunidad ${communityScore(i.id) || "–"}</small></a>
                 <span class="admin-photo">
-                  ${i.resenaEquipo ? `<button class="link-btn" data-action="team-review-sign" data-id="${esc(i.id)}" title="Firma de la reseña del equipo">✍️ ${teamReviewSigner(i) ? esc(teamReviewSigner(i)) : "Firmar reseña"}</button>` : ""}
                   <button class="link-btn" data-action="item-photo" data-id="${esc(i.id)}">📷 ${itemPhoto(i) ? "Cambiar" : "Foto"}</button>
                   ${itemPhoto(i) ? `<button class="link-btn danger" data-action="item-photo-clear" data-id="${esc(i.id)}">Quitar foto</button>` : ""}
                 </span>
@@ -1202,9 +1172,7 @@
     "article-photo-clear": el => {
       if (confirm("¿Quitar la portada de este artículo?")) runAndReload(() => Store.setSiteContent("img:article:" + el.dataset.id, null), "Se quitó la portada.");
     },
-    "article-sign": el => openSignModal("article", el.dataset.id),
-    "team-review-sign": el => openSignModal("item", el.dataset.id),
-    "review-sign": el => openSignModal("review", el.dataset.id),
+    "article-sign": el => openSignModal(el.dataset.id),
     "review-photo": el => uploadAndApply("media", url => Store.setReviewPhoto(el.dataset.id, url), "Foto agregada a la reseña."),
     "review-photo-clear": el => {
       if (confirm("¿Quitar la foto de esta reseña?")) runAndReload(() => Store.setReviewPhoto(el.dataset.id, null), "Se quitó la foto de la reseña.");

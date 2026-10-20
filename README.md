@@ -25,9 +25,6 @@ Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni co
   Las fotos se achican automáticamente antes de subirse. Mientras un título no tenga foto, se muestra un afiche generado.
 - **Artículos firmados**: cada artículo muestra su firma (autor/a) arriba y una firma manuscrita al final.
   El admin la edita desde el sitio (✍️ Firmar) o se puede poner `autor` en `js/articles.js`.
-- **Reseñas firmadas**: desde una cuenta admin (por ejemplo la cuenta compartida del equipo) cada integrante
-  firma con nombre y apellido “La reseña del equipo” de cada ficha y las reseñas que publicó con esa cuenta
-  (✍️ Firmar). Los nombres del equipo se sugieren solos.
 - **Movimiento**: cartelera deslizante en el inicio, fondo animado, tarjetas que aparecen al hacer scroll,
   ruleta en “¿Qué veo hoy?”, animaciones de like, medallas y firma. Si el sistema tiene activado
   “reducir movimiento”, las animaciones se apagan.
