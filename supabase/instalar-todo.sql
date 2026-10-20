@@ -177,6 +177,8 @@ create policy "admin borra reseñas" on public.reviews for delete
 --   img:item:<id>        foto de una película o serie
 --   img:article:<id>     foto de portada de un artículo
 --   author:article:<id>  firma de un artículo
+--   author:item:<id>     firma de la reseña del equipo de un título
+--   author:review:<id>   firma (nombre y apellido) de una reseña publicada desde la cuenta del equipo
 create table if not exists public.site_content (
   key text primary key check (char_length(key) <= 120),
   value text not null check (char_length(value) <= 1000),
