@@ -148,12 +148,17 @@
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         .map(r => Object.assign({}, r, { avatarUrl: users[r.userId] ? users[r.userId].avatarUrl || null : null, photoUrl: r.photoUrl || null, firma: r.firma || null }));
     },
-    async saveReview({ itemId, rating, text, photoUrl, firma }) {
+    // id: la reseña a editar. Sin id se publica una nueva; los usuarios comunes
+    // tienen una sola por título, los admins pueden publicar varias.
+    async saveReview({ id, itemId, rating, text, photoUrl, firma }) {
       if (!current) throw new Error("Tenés que ingresar para reseñar.");
       validateReview({ rating, text });
       validateFirma(firma);
       const reviews = LS.get("reviews", []);
-      const existing = reviews.find(r => r.userId === current.id && r.itemId === itemId);
+      const existing = id
+        ? reviews.find(r => r.id === id && r.userId === current.id)
+        : (current.isAdmin ? null : reviews.find(r => r.userId === current.id && r.itemId === itemId));
+      if (id && !existing) throw new Error("No encontramos la reseña para editar.");
       if (existing) {
         existing.rating = rating;
         existing.text = text.trim();
@@ -276,6 +281,11 @@
     if (/rate limit|only request this after/i.test(error.message)) {
       throw new Error("Hubo demasiados registros o intentos seguidos. Probá de nuevo en unos minutos.");
     }
+    if (/reviews_user_id_item_id_key|una reseña de este título/i.test(error.message)) {
+      throw new Error(current && current.isAdmin
+        ? "Para publicar más de una reseña por título falta ejecutar supabase/varias-resenas.sql en Supabase."
+        : "Ya publicaste una reseña de este título: podés editarla.");
+    }
     if (/firma/i.test(error.message)) {
       throw new Error("La firma todavía no está activada: falta ejecutar supabase/firma.sql en Supabase.");
     }
@@ -341,14 +351,21 @@
         likes: (r.review_likes || []).map(l => l.user_id)
       }));
     },
-    async saveReview({ itemId, rating, text, photoUrl, firma }) {
+    async saveReview({ id, itemId, rating, text, photoUrl, firma }) {
       if (!current) throw new Error("Tenés que ingresar para reseñar.");
       validateReview({ rating, text });
       validateFirma(firma);
-      const row = { user_id: current.id, item_id: itemId, rating, body: text.trim(), updated_at: new Date().toISOString() };
+      const row = { rating, body: text.trim() };
       if (photoUrl !== undefined) row.photo_url = photoUrl;
       if (firma !== undefined) row.firma = firma || null;
-      check(await sb.from("reviews").upsert(row, { onConflict: "user_id,item_id" }));
+      if (id) {
+        row.updated_at = new Date().toISOString();
+        const res = await sb.from("reviews").update(row).eq("id", id).eq("user_id", current.id).select("id");
+        check(res);
+        if (!res.data.length) throw new Error("No encontramos la reseña para editar.");
+      } else {
+        check(await sb.from("reviews").insert(Object.assign(row, { user_id: current.id, item_id: itemId })));
+      }
     },
     async setReviewPhoto(reviewId, photoUrl) {
       const res = await sb.from("reviews").update({ photo_url: photoUrl }).eq("id", reviewId).select("id");

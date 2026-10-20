@@ -27,6 +27,9 @@ Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni co
   El admin la edita desde el sitio (✍️ Firmar) o se puede poner `autor` en `js/articles.js`.
 - **Reseñas firmadas**: al escribir una reseña se puede poner una firma opcional (nombre y apellido), que se
   muestra manuscrita al final. Requiere ejecutar [`supabase/firma.sql`](supabase/firma.sql) (ya incluido en `instalar-todo.sql`).
+- **Varias reseñas por título para los admins**: los usuarios comunes tienen una reseña por título; los admins
+  (por ejemplo la cuenta del equipo) pueden publicar varias, una por integrante, y editar cada una por separado.
+  Requiere ejecutar [`supabase/varias-resenas.sql`](supabase/varias-resenas.sql) (ya incluido en `instalar-todo.sql`).
 - **Movimiento**: cartelera deslizante en el inicio, fondo animado, tarjetas que aparecen al hacer scroll,
   ruleta en “¿Qué veo hoy?”, animaciones de like, medallas y firma. Si el sistema tiene activado
   “reducir movimiento”, las animaciones se apagan.

@@ -26,7 +26,9 @@
     authTab: "login",
     animateNext: true,    // animar la próxima vista (al navegar, no al recargar datos)
     popLike: null,
-    roulette: 0
+    roulette: 0,
+    editing: null,        // reseña que un admin está editando (los admins pueden tener varias por título)
+    pendingEdit: null
   };
 
   const $ = sel => document.querySelector(sel);
@@ -335,7 +337,7 @@
         <footer class="review-foot">
           ${mine
             ? `<span class="like-count">❤️ ${r.likes.length}</span>
-               <button class="link-btn" data-action="edit-review" data-item="${esc(r.itemId)}">Editar</button>
+               <button class="link-btn" data-action="edit-review" data-item="${esc(r.itemId)}" data-id="${esc(r.id)}">Editar</button>
                <button class="link-btn danger" data-action="delete-review" data-id="${esc(r.id)}">Borrar</button>`
             : `<button class="like-btn${liked ? " liked" : ""}${state.popLike === r.id ? " pop" : ""}" data-action="like" data-id="${esc(r.id)}" aria-pressed="${liked ? "true" : "false"}">
                  <span class="heart">${liked ? "❤️" : "🤍"}</span> <span>${r.likes.length}</span>
@@ -563,7 +565,10 @@
     if (!i) return viewNotFound();
     const list = reviewsFor(i.id).slice().sort((a, b) => b.likes.length - a.likes.length || b.createdAt.localeCompare(a.createdAt));
     const community = communityScore(i.id);
-    const mine = state.user && list.find(r => r.userId === state.user.id);
+    const mineAll = state.user ? list.filter(r => r.userId === state.user.id) : [];
+    // Un usuario común tiene una sola reseña por título y el formulario la edita.
+    // Un admin puede tener varias: el formulario escribe una nueva salvo que esté editando una.
+    const mine = isAdmin() ? mineAll.find(r => r.id === state.editing) : mineAll[0];
     const inList = state.watchlist.includes(i.id);
     const trailer = "https://www.youtube.com/results?search_query=" + encodeURIComponent(`${i.titulo} ${i.anioNum} tráiler`);
     const photos = list.filter(r => safeImg(r.photoUrl));
@@ -607,7 +612,11 @@
       </section>` : ""}
 
       <section class="section" id="reviewForm">
-        <h2>${mine ? "Tu reseña" : "Escribí tu reseña"}</h2>
+        <div class="section-head">
+          <h2>${mine ? (isAdmin() ? "Editando tu reseña" : "Tu reseña") : mineAll.length ? "Escribí otra reseña" : "Escribí tu reseña"}</h2>
+          ${isAdmin() && mine ? `<button class="link-btn" data-action="cancel-edit">Cancelar edición</button>` : ""}
+        </div>
+        ${isAdmin() && mineAll.length && !mine ? `<p class="muted admin-note">Como admin podés publicar varias reseñas de este título (por ejemplo, una por integrante del equipo). Firmala con su nombre y apellido.</p>` : ""}
         ${state.user ? reviewForm(i, mine) : `
           <div class="empty">
             <p>Para publicar una reseña necesitás una cuenta. Cada reseña suma puntos y medallas.</p>
@@ -682,8 +691,9 @@
       const firmaValue = form.firma.value.trim().replace(/\s+/g, " ");
       const firma = firmaValue || (mine && mine.firma) ? firmaValue : undefined;
       try {
-        await Store.saveReview({ itemId: i.id, rating: Number(form.rating.value), text: form.text.value, photoUrl, firma });
-        toast("¡Reseña publicada! +10 XP");
+        await Store.saveReview({ id: mine ? mine.id : undefined, itemId: i.id, rating: Number(form.rating.value), text: form.text.value, photoUrl, firma });
+        toast(mine ? "Reseña actualizada." : "¡Reseña publicada! +10 XP");
+        state.editing = null;
         await reload();
       } catch (err) {
         $("#reviewError").textContent = err.message;
@@ -1111,6 +1121,7 @@
     "reviews-cat": el => { state.resenas.cat = el.dataset.cat; render(); },
     "reviews-order": el => { state.resenas.orden = el.dataset.order; render(); },
     "articles-tag": el => { state.articulos.tag = el.dataset.tag; render(); },
+    "cancel-edit": () => { state.editing = null; render(); },
     "edit-team-rating": el => {
       const box = $("#teamScore");
       box.innerHTML = `<span class="score-label">Puntaje del equipo (0 a 10)</span>${ratingForm(itemsById[el.dataset.id])}`;
@@ -1121,7 +1132,13 @@
     },
     "edit-review": el => {
       const target = "#/titulo/" + el.dataset.item;
-      if (location.hash !== target) location.hash = target;
+      if (location.hash !== target) {
+        state.pendingEdit = el.dataset.id;
+        location.hash = target;
+      } else {
+        state.editing = el.dataset.id;
+        render();
+      }
       setTimeout(() => { const f = $("#reviewForm"); if (f) f.scrollIntoView({ behavior: "smooth" }); }, 50);
     },
     like: async el => {
@@ -1208,6 +1225,8 @@
   window.addEventListener("hashchange", () => {
     document.body.classList.remove("nav-open");
     closeModal();
+    state.editing = state.pendingEdit;
+    state.pendingEdit = null;
     state.animateNext = true;
     render();
     window.scrollTo(0, 0);
