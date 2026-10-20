@@ -1,4 +1,4 @@
--- CineLab · instalación completa (schema + admin + fotos)
+-- CineLab · instalación completa (schema + admin + fotos + firma)
 -- Para un proyecto de Supabase NUEVO: pegar todo en el SQL Editor y ejecutar una sola vez.
 
 -- ===================================================== 1. schema.sql
@@ -221,3 +221,10 @@ create policy "cinelab borrar mis fotos" on storage.objects for delete to authen
     bucket_id = 'cinelab'
     and ((storage.foldername(name))[2] = (select auth.uid())::text or (select public.is_admin()))
   );
+
+-- ===================================================== 4. firma.sql
+-- CineLab · firma de las reseñas
+-- Ejecutar en el SQL Editor (una sola vez). Agrega la firma opcional
+-- (nombre y apellido) que se puede poner al escribir una reseña.
+alter table public.reviews add column if not exists firma text
+  check (firma is null or char_length(firma) between 3 and 80);

@@ -25,6 +25,8 @@ Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni co
   Las fotos se achican automáticamente antes de subirse. Mientras un título no tenga foto, se muestra un afiche generado.
 - **Artículos firmados**: cada artículo muestra su firma (autor/a) arriba y una firma manuscrita al final.
   El admin la edita desde el sitio (✍️ Firmar) o se puede poner `autor` en `js/articles.js`.
+- **Reseñas firmadas**: al escribir una reseña se puede poner una firma opcional (nombre y apellido), que se
+  muestra manuscrita al final. Requiere ejecutar [`supabase/firma.sql`](supabase/firma.sql) (ya incluido en `instalar-todo.sql`).
 - **Movimiento**: cartelera deslizante en el inicio, fondo animado, tarjetas que aparecen al hacer scroll,
   ruleta en “¿Qué veo hoy?”, animaciones de like, medallas y firma. Si el sistema tiene activado
   “reducir movimiento”, las animaciones se apagan.

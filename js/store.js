@@ -26,6 +26,13 @@
     if (text.length > 3000) throw new Error("La reseña no puede superar los 3000 caracteres.");
   }
 
+  // Firma opcional de la reseña: nombre y apellido.
+  function validateFirma(firma) {
+    if (!firma) return;
+    if (firma.length > 80) throw new Error("La firma no puede superar los 80 caracteres.");
+    if (firma.split(" ").length < 2) throw new Error("Para firmar escribí nombre y apellido.");
+  }
+
   function validateTeamRating(rating) {
     if (rating !== null && !(rating >= 0 && rating <= 10)) throw new Error("El puntaje tiene que estar entre 0 y 10.");
   }
@@ -139,22 +146,24 @@
       const users = Object.fromEntries(LS.get("users", []).map(u => [u.id, u]));
       return LS.get("reviews", []).slice()
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        .map(r => Object.assign({}, r, { avatarUrl: users[r.userId] ? users[r.userId].avatarUrl || null : null, photoUrl: r.photoUrl || null }));
+        .map(r => Object.assign({}, r, { avatarUrl: users[r.userId] ? users[r.userId].avatarUrl || null : null, photoUrl: r.photoUrl || null, firma: r.firma || null }));
     },
-    async saveReview({ itemId, rating, text, photoUrl }) {
+    async saveReview({ itemId, rating, text, photoUrl, firma }) {
       if (!current) throw new Error("Tenés que ingresar para reseñar.");
       validateReview({ rating, text });
+      validateFirma(firma);
       const reviews = LS.get("reviews", []);
       const existing = reviews.find(r => r.userId === current.id && r.itemId === itemId);
       if (existing) {
         existing.rating = rating;
         existing.text = text.trim();
         if (photoUrl !== undefined) existing.photoUrl = photoUrl;
+        if (firma !== undefined) existing.firma = firma || null;
         existing.updatedAt = new Date().toISOString();
       } else {
         reviews.push({
           id: uid(), userId: current.id, username: current.username, itemId, rating,
-          text: text.trim(), photoUrl: photoUrl || null, createdAt: new Date().toISOString(), likes: []
+          text: text.trim(), photoUrl: photoUrl || null, firma: firma || null, createdAt: new Date().toISOString(), likes: []
         });
       }
       LS.save("reviews", reviews);
@@ -267,6 +276,9 @@
     if (/rate limit|only request this after/i.test(error.message)) {
       throw new Error("Hubo demasiados registros o intentos seguidos. Probá de nuevo en unos minutos.");
     }
+    if (/firma/i.test(error.message)) {
+      throw new Error("La firma todavía no está activada: falta ejecutar supabase/firma.sql en Supabase.");
+    }
     if (/photo_url|avatar_url|site_content|Bucket not found/i.test(error.message)) {
       throw new Error("Las fotos todavía no están activadas: falta ejecutar supabase/fotos.sql en Supabase.");
     }
@@ -317,22 +329,25 @@
       const base = "id, user_id, item_id, rating, body, created_at, updated_at, review_likes(user_id)";
       const query = cols => () => sb.from("reviews").select(cols).order("created_at", { ascending: false });
       const res = await firstThatWorks([
+        query(base + ", photo_url, firma, profiles!user_id(username, avatar_url)"),
         query(base + ", photo_url, profiles!user_id(username, avatar_url)"),
         query(base + ", profiles!user_id(username)")
       ]);
       check(res);
       return res.data.map(r => ({
         id: r.id, userId: r.user_id, username: r.profiles ? r.profiles.username : "usuario",
-        avatarUrl: (r.profiles && r.profiles.avatar_url) || null, photoUrl: r.photo_url || null,
+        avatarUrl: (r.profiles && r.profiles.avatar_url) || null, photoUrl: r.photo_url || null, firma: r.firma || null,
         itemId: r.item_id, rating: r.rating, text: r.body, createdAt: r.created_at, updatedAt: r.updated_at,
         likes: (r.review_likes || []).map(l => l.user_id)
       }));
     },
-    async saveReview({ itemId, rating, text, photoUrl }) {
+    async saveReview({ itemId, rating, text, photoUrl, firma }) {
       if (!current) throw new Error("Tenés que ingresar para reseñar.");
       validateReview({ rating, text });
+      validateFirma(firma);
       const row = { user_id: current.id, item_id: itemId, rating, body: text.trim(), updated_at: new Date().toISOString() };
       if (photoUrl !== undefined) row.photo_url = photoUrl;
+      if (firma !== undefined) row.firma = firma || null;
       check(await sb.from("reviews").upsert(row, { onConflict: "user_id,item_id" }));
     },
     async setReviewPhoto(reviewId, photoUrl) {

@@ -330,6 +330,7 @@
         </header>
         ${opts.showItem && item ? `<p class="review-item">sobre <a href="#/titulo/${esc(item.id)}">${esc(item.titulo)}</a></p>` : ""}
         <p class="review-text">${esc(r.text)}</p>
+        ${r.firma ? `<p class="review-signature">— <span>${esc(r.firma)}</span></p>` : ""}
         ${reviewPhoto(r)}
         <footer class="review-foot">
           ${mine
@@ -621,7 +622,7 @@
       </section>`;
 
     const form = $("#reviewEditor");
-    if (form) bindReviewForm(form, i);
+    if (form) bindReviewForm(form, i, mine);
   }
 
   function photoField(url) {
@@ -642,6 +643,10 @@
         </div>
         <input type="hidden" name="rating" value="${rating}">
         <textarea name="text" rows="5" maxlength="3000" placeholder="¿Qué te pareció ${esc(i.titulo)}? Contá sobre la historia, las actuaciones, lo que te hizo sentir… (mínimo 10 caracteres)">${mine ? esc(mine.text) : ""}</textarea>
+        <label class="firma-field">Firma <small class="muted">(opcional: nombre y apellido de quien la escribe)</small>
+          <input name="firma" maxlength="80" list="teamNames" autocomplete="off" placeholder="ej: Rocío Stagno" value="${mine && mine.firma ? esc(mine.firma) : ""}">
+        </label>
+        ${isAdmin() ? `<datalist id="teamNames">${(equipo || []).map(n => `<option value="${esc(n)}">`).join("")}</datalist>` : ""}
         <div class="photo-field">${photoField(mine && mine.photoUrl)}</div>
         <div class="form-foot">
           <small class="muted"><span id="chars">${mine ? mine.text.length : 0}</span>/3000 · más de 400 caracteres desbloquea 📜 Crítico de fondo</small>
@@ -651,7 +656,7 @@
       </form>`;
   }
 
-  function bindReviewForm(form, i) {
+  function bindReviewForm(form, i, mine) {
     const starBtns = form.querySelectorAll("[data-star]");
     const paint = n => starBtns.forEach(b => {
       b.classList.toggle("on", Number(b.dataset.star) <= n);
@@ -673,8 +678,11 @@
       btn.disabled = true;
       // dataset.photo: sin definir = no cambió · "" = se quitó · url = foto nueva.
       const photoUrl = form.dataset.photo === undefined ? undefined : (form.dataset.photo || null);
+      // La firma solo se manda si hay una o si se borró una que existía.
+      const firmaValue = form.firma.value.trim().replace(/\s+/g, " ");
+      const firma = firmaValue || (mine && mine.firma) ? firmaValue : undefined;
       try {
-        await Store.saveReview({ itemId: i.id, rating: Number(form.rating.value), text: form.text.value, photoUrl });
+        await Store.saveReview({ itemId: i.id, rating: Number(form.rating.value), text: form.text.value, photoUrl, firma });
         toast("¡Reseña publicada! +10 XP");
         await reload();
       } catch (err) {
