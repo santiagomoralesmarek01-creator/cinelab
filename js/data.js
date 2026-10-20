@@ -1,6 +1,12 @@
 // Catálogo de CineLab. Para sumar un título, agregá un objeto a `items`
 // con un `id` único (sin espacios): se usa en la URL y para guardar reseñas.
 window.CINELAB_DATA = {
+  // Integrantes del proyecto: se sugieren al firmar un artículo.
+  equipo: [
+    "Rocío Stagno", "Rocío Nicole Murillo Yñiguez", "Daiana Solis", "Camila Cardozo",
+    "Facundo Britez", "Ramiro García", "Priscila Alvarado", "Carolina Ardenghi"
+  ],
+
   categorias: {
     "Series infantojuveniles": {
       titulo: "Cris Morena: el fenómeno que marcó a generaciones",

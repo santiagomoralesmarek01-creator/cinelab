@@ -20,6 +20,14 @@ Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni co
   - XP: reseña publicada +10 · like recibido +5 · medalla +20.
   - Niveles: Espectador → Cinéfilo → Crítico → Director → Leyenda.
 - **Ranking de críticos** y **perfil público** de cada usuario con sus medallas.
+- **Fotos**: cada usuario puede sumar una foto a su reseña y elegir su foto de perfil. El admin puede agregar
+  fotos a las películas y series, portadas a los artículos y fotos a cualquier reseña (y moderarlas).
+  Las fotos se achican automáticamente antes de subirse. Mientras un título no tenga foto, se muestra un afiche generado.
+- **Artículos firmados**: cada artículo muestra su firma (autor/a) arriba y una firma manuscrita al final.
+  El admin la edita desde el sitio (✍️ Firmar) o se puede poner `autor` en `js/articles.js`.
+- **Movimiento**: cartelera deslizante en el inicio, fondo animado, tarjetas que aparecen al hacer scroll,
+  ruleta en “¿Qué veo hoy?”, animaciones de like, medallas y firma. Si el sistema tiene activado
+  “reducir movimiento”, las animaciones se apagan.
 - **Contacto**: formulario de sugerencias y links a redes.
 - Diseño adaptado a celulares.
 
@@ -51,6 +59,12 @@ en el mismo navegador.
    en su perfil (`#/admin`), donde puede cambiar o quitar el puntaje del equipo de todos los títulos.
 
 En modo demo, la primera cuenta creada en el navegador es la administradora.
+
+### Fotos y firmas
+
+Ejecutá [`supabase/fotos.sql`](supabase/fotos.sql) en el SQL Editor (después de `admin.sql`). Crea el bucket público
+`cinelab` en Storage, las columnas de foto de reseñas y perfiles, la tabla `site_content` (fotos de títulos y
+artículos, firmas) y los permisos: cada usuario sube fotos solo en su carpeta y el admin puede subir y moderar todo.
 
 La anon key es pública por diseño; quién puede leer o modificar qué lo controlan las políticas RLS del schema
 (por ejemplo, nadie puede editar la reseña de otra persona ni darse like a sí mismo).

@@ -1,11 +1,12 @@
-// Capa de datos: cuentas, reseñas, likes y "quiero verla".
-// Expone la misma API tanto en modo demo (localStorage) como con Supabase,
-// así el resto de la app no necesita saber dónde se guardan los datos.
+// Capa de datos: cuentas, reseñas, likes, "quiero verla", fotos y contenido
+// editable por el admin. Expone la misma API tanto en modo demo (localStorage)
+// como con Supabase, así el resto de la app no necesita saber dónde se guardan.
 (function () {
   "use strict";
 
   const cfg = window.CINELAB_CONFIG || {};
   const useSupabase = Boolean(cfg.supabaseUrl && cfg.supabaseAnonKey);
+  const BUCKET = "cinelab";
   const listeners = [];
   let current = null;
 
@@ -25,6 +26,43 @@
     if (text.length > 3000) throw new Error("La reseña no puede superar los 3000 caracteres.");
   }
 
+  function validateTeamRating(rating) {
+    if (rating !== null && !(rating >= 0 && rating <= 10)) throw new Error("El puntaje tiene que estar entre 0 y 10.");
+  }
+
+  function requireAdmin() {
+    if (!current || !current.isAdmin) throw new Error("Solo un administrador puede hacer esto.");
+  }
+
+  // Achica la foto antes de guardarla: carga más rápido y ocupa menos espacio.
+  function resizeImage(file, maxSize, quality) {
+    return new Promise((resolve, reject) => {
+      if (!file || !/^image\//.test(file.type)) return reject(new Error("Elegí un archivo de imagen (JPG, PNG o WebP)."));
+      if (file.size > 15 * 1024 * 1024) return reject(new Error("La imagen es muy pesada (máximo 15 MB)."));
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(b => b ? resolve(b) : reject(new Error("No se pudo procesar la imagen.")), "image/jpeg", quality);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("No se pudo leer la imagen.")); };
+      img.src = url;
+    });
+  }
+
+  function blobToDataUrl(blob) {
+    return new Promise(resolve => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.readAsDataURL(blob);
+    });
+  }
+
   // ---------------------------------------------------------------- Modo demo
   const LS = {
     get(key, fallback) {
@@ -32,7 +70,12 @@
       catch (e) { return fallback; }
     },
     set(key, value) {
-      try { localStorage.setItem("cinelab:" + key, JSON.stringify(value)); } catch (e) { /* sin storage */ }
+      try { localStorage.setItem("cinelab:" + key, JSON.stringify(value)); return true; }
+      catch (e) { return false; }
+    },
+    // Para datos que pueden incluir fotos: avisa si el navegador se quedó sin espacio.
+    save(key, value) {
+      if (!LS.set(key, value)) throw new Error("No hay más espacio en este navegador (modo demo). Probá con menos fotos o conectá Supabase.");
     }
   };
 
@@ -53,10 +96,8 @@
     return "x" + h;
   }
 
-  function publicUser(u) { return u ? { id: u.id, email: u.email, username: u.username, isAdmin: Boolean(u.isAdmin) } : null; }
-
-  function validateTeamRating(rating) {
-    if (rating !== null && !(rating >= 0 && rating <= 10)) throw new Error("El puntaje tiene que estar entre 0 y 10.");
+  function publicUser(u) {
+    return u ? { id: u.id, email: u.email, username: u.username, isAdmin: Boolean(u.isAdmin), avatarUrl: u.avatarUrl || null } : null;
   }
 
   const local = {
@@ -74,7 +115,7 @@
       // En modo demo la primera cuenta creada en el navegador es la administradora.
       const user = { id: uid(), email, username, pass: await hash(email + ":" + password), isAdmin: users.length === 0, createdAt: new Date().toISOString() };
       users.push(user);
-      LS.set("users", users);
+      LS.save("users", users);
       LS.set("session", user.id);
       current = publicUser(user);
       emit();
@@ -95,9 +136,12 @@
       emit();
     },
     async listReviews() {
-      return LS.get("reviews", []).slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      const users = Object.fromEntries(LS.get("users", []).map(u => [u.id, u]));
+      return LS.get("reviews", []).slice()
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .map(r => Object.assign({}, r, { avatarUrl: users[r.userId] ? users[r.userId].avatarUrl || null : null, photoUrl: r.photoUrl || null }));
     },
-    async saveReview({ itemId, rating, text }) {
+    async saveReview({ itemId, rating, text, photoUrl }) {
       if (!current) throw new Error("Tenés que ingresar para reseñar.");
       validateReview({ rating, text });
       const reviews = LS.get("reviews", []);
@@ -105,17 +149,25 @@
       if (existing) {
         existing.rating = rating;
         existing.text = text.trim();
+        if (photoUrl !== undefined) existing.photoUrl = photoUrl;
         existing.updatedAt = new Date().toISOString();
       } else {
         reviews.push({
           id: uid(), userId: current.id, username: current.username, itemId, rating,
-          text: text.trim(), createdAt: new Date().toISOString(), likes: []
+          text: text.trim(), photoUrl: photoUrl || null, createdAt: new Date().toISOString(), likes: []
         });
       }
-      LS.set("reviews", reviews);
+      LS.save("reviews", reviews);
+    },
+    async setReviewPhoto(reviewId, photoUrl) {
+      const reviews = LS.get("reviews", []);
+      const r = reviews.find(x => x.id === reviewId);
+      if (!r || !current || (r.userId !== current.id && !current.isAdmin)) throw new Error("No podés cambiar la foto de esta reseña.");
+      r.photoUrl = photoUrl;
+      LS.save("reviews", reviews);
     },
     async deleteReview(id) {
-      LS.set("reviews", LS.get("reviews", []).filter(r => !(r.id === id && current && r.userId === current.id)));
+      LS.set("reviews", LS.get("reviews", []).filter(r => !(r.id === id && current && (r.userId === current.id || current.isAdmin))));
     },
     async setLike(reviewId, liked) {
       if (!current) throw new Error("Tenés que ingresar para dar like.");
@@ -125,7 +177,7 @@
       if (r.userId === current.id) throw new Error("No podés darle like a tu propia reseña.");
       r.likes = r.likes.filter(u => u !== current.id);
       if (liked) r.likes.push(current.id);
-      LS.set("reviews", reviews);
+      LS.save("reviews", reviews);
     },
     async getWatchlist() {
       return current ? LS.get("watch:" + current.id, []) : [];
@@ -140,11 +192,34 @@
       return LS.get("teamRatings", {});
     },
     async setTeamRating(itemId, rating) {
-      if (!current || !current.isAdmin) throw new Error("Solo un administrador puede cambiar el puntaje del equipo.");
+      requireAdmin();
       validateTeamRating(rating);
       const all = LS.get("teamRatings", {});
       all[itemId] = rating; // null = sin puntaje del equipo
       LS.set("teamRatings", all);
+    },
+    // kind: "reviews" | "avatars" | "media". En modo demo la foto queda dentro del navegador.
+    async uploadImage(file, kind) {
+      if (!current) throw new Error("Tenés que ingresar para subir fotos.");
+      if (kind === "media") requireAdmin();
+      return blobToDataUrl(await resizeImage(file, kind === "avatars" ? 256 : 900, 0.72));
+    },
+    async setAvatar(url) {
+      if (!current) throw new Error("Tenés que ingresar.");
+      const users = LS.get("users", []);
+      const u = users.find(x => x.id === current.id);
+      u.avatarUrl = url;
+      LS.save("users", users);
+      current = publicUser(u);
+    },
+    async getSiteContent() {
+      return LS.get("siteContent", {});
+    },
+    async setSiteContent(key, value) {
+      requireAdmin();
+      const all = LS.get("siteContent", {});
+      if (value === null) delete all[key]; else all[key] = value;
+      LS.save("siteContent", all);
     }
   };
 
@@ -161,15 +236,24 @@
     });
   }
 
+  // Prueba consultas de la más completa a la más simple, para que el sitio
+  // siga andando aunque todavía no se hayan ejecutado los SQL nuevos.
+  async function firstThatWorks(queries) {
+    let res;
+    for (const q of queries) {
+      res = await q();
+      if (!res.error) return res;
+    }
+    return res;
+  }
+
   async function userFromSession(session) {
     if (!session) return null;
     const u = session.user;
-    let res = await sb.from("profiles").select("username, is_admin").eq("id", u.id).maybeSingle();
-    // Si todavía no se ejecutó supabase/admin.sql no existe la columna is_admin.
-    if (res.error) res = await sb.from("profiles").select("username").eq("id", u.id).maybeSingle();
-    const data = res.data;
+    const profile = cols => () => sb.from("profiles").select(cols).eq("id", u.id).maybeSingle();
+    const { data } = await firstThatWorks([profile("username, is_admin, avatar_url"), profile("username, is_admin"), profile("username")]);
     return {
-      id: u.id, email: u.email, isAdmin: Boolean(data && data.is_admin),
+      id: u.id, email: u.email, isAdmin: Boolean(data && data.is_admin), avatarUrl: (data && data.avatar_url) || null,
       username: (data && data.username) || (u.user_metadata && u.user_metadata.username) || u.email.split("@")[0]
     };
   }
@@ -180,6 +264,9 @@
     if (/Invalid login credentials/i.test(error.message)) throw new Error("Email o contraseña incorrectos.");
     if (/already registered/i.test(error.message)) throw new Error("Ya existe una cuenta con ese email.");
     if (/Email not confirmed/i.test(error.message)) throw new Error("Confirmá tu email antes de ingresar (revisá tu casilla).");
+    if (/photo_url|avatar_url|site_content|Bucket not found/i.test(error.message)) {
+      throw new Error("Las fotos todavía no están activadas: falta ejecutar supabase/fotos.sql en Supabase.");
+    }
     throw new Error(error.message);
   }
 
@@ -224,23 +311,31 @@
       emit();
     },
     async listReviews() {
-      const res = await sb.from("reviews")
-        .select("id, user_id, item_id, rating, body, created_at, updated_at, profiles!user_id(username), review_likes(user_id)")
-        .order("created_at", { ascending: false });
+      const base = "id, user_id, item_id, rating, body, created_at, updated_at, review_likes(user_id)";
+      const query = cols => () => sb.from("reviews").select(cols).order("created_at", { ascending: false });
+      const res = await firstThatWorks([
+        query(base + ", photo_url, profiles!user_id(username, avatar_url)"),
+        query(base + ", profiles!user_id(username)")
+      ]);
       check(res);
       return res.data.map(r => ({
         id: r.id, userId: r.user_id, username: r.profiles ? r.profiles.username : "usuario",
+        avatarUrl: (r.profiles && r.profiles.avatar_url) || null, photoUrl: r.photo_url || null,
         itemId: r.item_id, rating: r.rating, text: r.body, createdAt: r.created_at, updatedAt: r.updated_at,
         likes: (r.review_likes || []).map(l => l.user_id)
       }));
     },
-    async saveReview({ itemId, rating, text }) {
+    async saveReview({ itemId, rating, text, photoUrl }) {
       if (!current) throw new Error("Tenés que ingresar para reseñar.");
       validateReview({ rating, text });
-      check(await sb.from("reviews").upsert(
-        { user_id: current.id, item_id: itemId, rating, body: text.trim(), updated_at: new Date().toISOString() },
-        { onConflict: "user_id,item_id" }
-      ));
+      const row = { user_id: current.id, item_id: itemId, rating, body: text.trim(), updated_at: new Date().toISOString() };
+      if (photoUrl !== undefined) row.photo_url = photoUrl;
+      check(await sb.from("reviews").upsert(row, { onConflict: "user_id,item_id" }));
+    },
+    async setReviewPhoto(reviewId, photoUrl) {
+      const res = await sb.from("reviews").update({ photo_url: photoUrl }).eq("id", reviewId).select("id");
+      check(res);
+      if (!res.data.length) throw new Error("No podés cambiar la foto de esta reseña.");
     },
     async deleteReview(id) {
       check(await sb.from("reviews").delete().eq("id", id));
@@ -269,12 +364,39 @@
       return Object.fromEntries(res.data.map(r => [r.item_id, r.rating === null ? null : Number(r.rating)]));
     },
     async setTeamRating(itemId, rating) {
-      if (!current || !current.isAdmin) throw new Error("Solo un administrador puede cambiar el puntaje del equipo.");
+      requireAdmin();
       validateTeamRating(rating);
       // rating null se guarda igual: significa "sin puntaje del equipo".
       check(await sb.from("team_ratings").upsert(
         { item_id: itemId, rating, updated_by: current.id, updated_at: new Date().toISOString() },
         { onConflict: "item_id" }));
+    },
+    // Las fotos van al bucket público "cinelab", en una carpeta por usuario.
+    async uploadImage(file, kind) {
+      if (!current) throw new Error("Tenés que ingresar para subir fotos.");
+      if (kind === "media") requireAdmin();
+      const blob = await resizeImage(file, kind === "avatars" ? 256 : 1400, 0.82);
+      const path = `${kind}/${current.id}/${uid()}.jpg`;
+      check(await sb.storage.from(BUCKET).upload(path, blob, { contentType: "image/jpeg", cacheControl: "31536000" }));
+      return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+    },
+    async setAvatar(url) {
+      if (!current) throw new Error("Tenés que ingresar.");
+      check(await sb.from("profiles").update({ avatar_url: url }).eq("id", current.id));
+      current = Object.assign({}, current, { avatarUrl: url });
+    },
+    async getSiteContent() {
+      const res = await sb.from("site_content").select("key, value");
+      if (res.error) return {};
+      return Object.fromEntries(res.data.map(r => [r.key, r.value]));
+    },
+    async setSiteContent(key, value) {
+      requireAdmin();
+      check(value === null
+        ? await sb.from("site_content").delete().eq("key", key)
+        : await sb.from("site_content").upsert(
+            { key, value, updated_by: current.id, updated_at: new Date().toISOString() },
+            { onConflict: "key" }));
     }
   };
 
@@ -283,6 +405,12 @@
   window.CinelabStore = Object.assign({}, impl, {
     user: () => current,
     onAuthChange(fn) { listeners.push(fn); },
+    // Solo se muestran fotos propias del sitio (Supabase Storage o, en demo, guardadas en el navegador).
+    isSafeImage(url) {
+      if (typeof url !== "string") return false;
+      if (useSupabase) return url.startsWith(cfg.supabaseUrl + "/storage/v1/object/public/" + BUCKET + "/");
+      return /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(url);
+    },
     // Recuerdo local de qué medallas ya se le mostraron a cada usuario.
     seenMedals(userId) { return LS.get("medals:" + userId, null); },
     setSeenMedals(userId, ids) { LS.set("medals:" + userId, ids); }
