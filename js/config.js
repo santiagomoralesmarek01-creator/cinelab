@@ -10,6 +10,6 @@
 // (Project Settings → API). La anon key es pública por diseño: la seguridad la
 // dan las políticas RLS del schema.
 window.CINELAB_CONFIG = {
-  supabaseUrl: "https://kiedpmiesanlnwtucdrj.supabase.co",
-  supabaseAnonKey: "sb_publishable_XdhEmupOA5PZ0BfylovBdg_Px2B_1HZ"
+  supabaseUrl: "https://btxemfpsgjhukmdjthwj.supabase.co",
+  supabaseAnonKey: "sb_publishable_LMioevT86eh2bnnsERKeVw_vA_ju0Wz"
 };
