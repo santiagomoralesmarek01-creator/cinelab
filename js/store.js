@@ -264,6 +264,9 @@
     if (/Invalid login credentials/i.test(error.message)) throw new Error("Email o contraseña incorrectos.");
     if (/already registered/i.test(error.message)) throw new Error("Ya existe una cuenta con ese email.");
     if (/Email not confirmed/i.test(error.message)) throw new Error("Confirmá tu email antes de ingresar (revisá tu casilla).");
+    if (/rate limit|only request this after/i.test(error.message)) {
+      throw new Error("Hubo demasiados registros o intentos seguidos. Probá de nuevo en unos minutos.");
+    }
     if (/photo_url|avatar_url|site_content|Bucket not found/i.test(error.message)) {
       throw new Error("Las fotos todavía no están activadas: falta ejecutar supabase/fotos.sql en Supabase.");
     }
