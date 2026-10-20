@@ -12,8 +12,12 @@
   const Ach = window.CinelabAchievements;
 
   // Las animaciones se apagan si la persona pidió "reducir movimiento" en su sistema.
-  const motion = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
-  if (motion) document.documentElement.classList.add("motion");
+  // El movimiento es parte del diseño, así que siempre está activo. Si el sistema
+  // pide "reducir movimiento", se suaviza (cartelera más lenta, sin efectos fuertes).
+  const motion = true;
+  const reducedMotion = Boolean(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  document.documentElement.classList.add("motion");
+  if (reducedMotion) document.documentElement.classList.add("reduced-motion");
 
   const state = {
     user: null,

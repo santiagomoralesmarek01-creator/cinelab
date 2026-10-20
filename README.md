@@ -32,7 +32,7 @@ Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni co
   Requiere ejecutar [`supabase/varias-resenas.sql`](supabase/varias-resenas.sql) (ya incluido en `instalar-todo.sql`).
 - **Movimiento**: cartelera deslizante en el inicio, fondo animado, tarjetas que aparecen al hacer scroll,
   ruleta en “¿Qué veo hoy?”, animaciones de like, medallas y firma. Si el sistema tiene activado
-  “reducir movimiento”, las animaciones se apagan.
+  “reducir movimiento”, la cartelera sigue moviéndose más lento y se apagan los efectos más fuertes.
 - **Contacto**: formulario de sugerencias y links a redes.
 - Diseño adaptado a celulares.
 
