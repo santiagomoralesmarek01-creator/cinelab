@@ -435,6 +435,17 @@
     }
   };
 
+  // Si Supabase no respondió al iniciar (por ejemplo, el proyecto está pausado),
+  // las operaciones fallan con un mensaje claro en vez de un error técnico.
+  Object.keys(remote).forEach(k => {
+    const fn = remote[k];
+    if (typeof fn !== "function" || k === "init") return;
+    remote[k] = function () {
+      if (!sb) return Promise.reject(new Error("No pudimos conectar con el servidor de CineLab. Probá de nuevo en un rato."));
+      return fn.apply(remote, arguments);
+    };
+  });
+
   const impl = useSupabase ? remote : local;
 
   window.CinelabStore = Object.assign({}, impl, {

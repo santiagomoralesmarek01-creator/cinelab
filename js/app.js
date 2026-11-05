@@ -72,9 +72,10 @@
 
   function safeImg(url) { return Store.isSafeImage(url) ? url : null; }
 
+  // Si la foto no carga, queda visible lo que hay debajo (iniciales o afiche generado).
   function avatar(name, url, opts) {
     opts = opts || {};
-    const inner = safeImg(url) ? `<img src="${esc(url)}" alt="" loading="lazy">` : initials(name);
+    const inner = initials(name) + (safeImg(url) ? `<img src="${esc(url)}" alt="" loading="lazy">` : "");
     const cls = "avatar" + (opts.cls ? " " + opts.cls : "");
     return opts.href ? `<a class="${cls}" href="${opts.href}">${inner}</a>` : `<span class="${cls}">${inner}</span>`;
   }
@@ -89,9 +90,8 @@
   // Foto de la película o, si todavía no tiene, un afiche generado con su título.
   function poster(i, cls) {
     const url = itemPhoto(i);
-    return `<div class="poster${cls ? " " + cls : ""}">${url
-      ? `<img src="${esc(url)}" alt="${esc(i.titulo)}" loading="lazy">`
-      : `<div class="poster-ph" style="--h:${catHue(i.categoria)}"><span class="ph-title">${esc(i.titulo)}</span><span class="ph-year">${esc(i.tipo)} · ${esc(i.anio)}</span></div>`}</div>`;
+    return `<div class="poster${cls ? " " + cls : ""}"><div class="poster-ph" style="--h:${catHue(i.categoria)}"><span class="ph-title">${esc(i.titulo)}</span><span class="ph-year">${esc(i.tipo)} · ${esc(i.anio)}</span></div>${url
+      ? `<img src="${esc(url)}" alt="${esc(i.titulo)}" loading="lazy">` : ""}</div>`;
   }
 
   function toast(html, kind) {
@@ -169,18 +169,36 @@
   });
 
   // ------------------------------------------------------------------- datos
+  // Ningún pedido al servidor puede dejar la página esperando para siempre.
+  function withTimeout(promise, ms) {
+    return Promise.race([promise, new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("El servidor tardó demasiado en responder.")), ms))]);
+  }
+
+  // Aviso fijo cuando el servidor (Supabase) no responde: el catálogo y los
+  // artículos se siguen viendo, pero no las reseñas, las fotos ni el ingreso.
+  const netBanner = document.createElement("div");
+  netBanner.className = "net-banner";
+  netBanner.hidden = true;
+  netBanner.setAttribute("role", "status");
+  netBanner.innerHTML = `<span>⚠️ No pudimos conectar con el servidor: por ahora no se ven las reseñas, las fotos ni el ingreso. El catálogo y los artículos funcionan igual.</span>
+    <button class="link-btn" data-action="retry">Reintentar</button>`;
+  $(".site-header").after(netBanner);
+  function setOffline(off) { netBanner.hidden = !off; }
+
   async function reload() {
     try {
-      const overrides = await Store.getTeamRatings();
+      const overrides = await withTimeout(Store.getTeamRatings(), 10000);
       items.forEach(i => { i.rating = i.id in overrides ? overrides[i.id] : i.ratingBase; });
     } catch (e) { /* se usan los puntajes de data.js */ }
-    try { state.content = await Store.getSiteContent(); } catch (e) { state.content = {}; }
+    try { state.content = await withTimeout(Store.getSiteContent(), 10000); } catch (e) { state.content = {}; }
     try {
-      state.reviews = await Store.listReviews();
-      state.watchlist = await Store.getWatchlist();
+      state.reviews = await withTimeout(Store.listReviews(), 10000);
+      setOffline(false);
     } catch (e) {
-      toast("No pudimos cargar las reseñas: " + esc(e.message), "error");
+      setOffline(true);
     }
+    try { state.watchlist = await withTimeout(Store.getWatchlist(), 10000); } catch (e) { /* lista vacía */ }
     state.user = Store.user();
     checkNewMedals();
     renderHeader();
@@ -1121,6 +1139,7 @@
     "close-modal": closeModal,
     logout: async () => { await Store.signOut(); location.hash = "#/"; toast("Cerraste sesión. ¡Hasta la próxima función!"); },
     random: spinRoulette,
+    retry: () => location.reload(),
     zoom: el => { if (safeImg(el.dataset.src)) openModal(`<img class="lightbox-img" src="${esc(el.dataset.src)}" alt="Foto ampliada">`, "modal-wide"); },
     "reviews-cat": el => { state.resenas.cat = el.dataset.cat; render(); },
     "reviews-order": el => { state.resenas.orden = el.dataset.order; render(); },
@@ -1223,6 +1242,11 @@
     $("#menuToggle").setAttribute("aria-expanded", String(open));
   });
 
+  // Una foto que no carga (servidor caído, archivo borrado) se oculta y deja ver lo de abajo.
+  document.addEventListener("error", e => {
+    if (e.target && e.target.tagName === "IMG") e.target.classList.add("img-failed");
+  }, true);
+
   const header = $(".site-header");
   window.addEventListener("scroll", () => header.classList.toggle("scrolled", window.scrollY > 10), { passive: true });
 
@@ -1243,14 +1267,16 @@
 
   // -------------------------------------------------------------------- start
   (async function start() {
-    app.innerHTML = `<p class="muted loading">Cargando…</p>`;
+    // El catálogo y los artículos se muestran enseguida, sin esperar al servidor.
+    state.animateNext = true;
+    renderHeader();
+    render();
     try {
-      await Store.init();
+      await withTimeout(Store.init(), 10000);
     } catch (err) {
-      toast("No pudimos conectar con el servidor. " + esc(err.message), "error");
+      setOffline(true);
     }
     state.user = Store.user();
-    state.animateNext = true;
     await reload();
   })();
 })();
