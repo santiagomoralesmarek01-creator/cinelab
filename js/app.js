@@ -93,12 +93,21 @@
     return base && firma ? Object.assign({}, base, { autor: firma }) : base;
   }
 
-  // Párrafos, subtítulos ("## ") y listas, con enlaces [[id]] a las fichas.
+  // Párrafos, subtítulos ("## "), listas y filas de afiches ({ afiches: [{ foto, titulo }] }),
+  // con enlaces [[id]] a las fichas.
   function renderBlocks(cuerpo) {
-    return cuerpo.map(b => Array.isArray(b)
-      ? `<ul>${b.map(li => `<li>${richText(li)}</li>`).join("")}</ul>`
-      : b.startsWith("## ") ? `<h3>${richText(b.slice(3))}</h3>` : `<p>${richText(b)}</p>`).join("");
+    return cuerpo.map(b => {
+      if (Array.isArray(b)) return `<ul>${b.map(li => `<li>${richText(li)}</li>`).join("")}</ul>`;
+      if (b && b.afiches) {
+        return `<div class="poster-strip">${b.afiches.filter(x => staticImg(x.foto)).map(x => `
+          <figure><img src="${esc(x.foto)}" alt="${esc(x.titulo)}" loading="lazy"><figcaption>${esc(x.titulo)}</figcaption></figure>`).join("")}</div>`;
+      }
+      return b.startsWith("## ") ? `<h3>${richText(b.slice(3))}</h3>` : `<p>${richText(b)}</p>`;
+    }).join("");
   }
+
+  // Solo el texto de un cuerpo (para contar palabras).
+  function plainWords(cuerpo) { return cuerpo.flat().filter(x => typeof x === "string").join(" ").split(/\s+/).length; }
   function articleAuthorRaw(a) { return state.content["author:article:" + a.id] || a.autor || ""; }
   function articleAuthor(a) { return articleAuthorRaw(a) || "Equipo CineLab"; }
 
@@ -425,7 +434,7 @@
   }
 
   function readingTime(a) {
-    return Math.max(1, Math.round(a.cuerpo.flat().join(" ").split(/\s+/).length / 200));
+    return Math.max(1, Math.round(plainWords(a.cuerpo) / 200));
   }
 
   function articleCard(a) {
@@ -686,7 +695,7 @@
   function teamReviewHtml(i) {
     const res = itemReview(i);
     if (!res) return "";
-    const words = res.cuerpo.flat().join(" ").split(/\s+/).length;
+    const words = plainWords(res.cuerpo);
     const long = words > 230;
     return `
       <section class="team-review${res.autor ? " signed" : ""}">

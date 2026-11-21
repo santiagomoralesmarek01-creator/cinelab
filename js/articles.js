@@ -165,5 +165,80 @@ window.CINELAB_ARTICULOS = [
       "## 10. Rust — Prime Video · Western / Drama",
       "Ambientada en los áridos territorios de Kansas a finales del siglo XIX, la historia sigue a Harland Rust, un veterano y endurecido forajido que sale de su escondite para rescatar a su nieto de trece años, condenado a la horca tras haber matado accidentalmente a un ranchero local. Ambos emprenden una difícil travesía hacia la frontera mexicana mientras son perseguidos por un implacable alguacil federal y un cazarrecompensas. Se caracteriza por un tono sombrío, grandes paisajes y una mirada cruda sobre la culpa, la redención y los lazos familiares en un mundo regido por la violencia."
     ]
+  },
+  {
+    id: "ranking-trilogias-marvel",
+    titulo: "Ranking: trilogías de Marvel",
+    bajada: "Guardianes de la Galaxia, Spider-Man, Deadpool, Thor y Capitán América: cuál es la mejor película de cada trilogía.",
+    autor: "Ramiro García",
+    foto: "img/marvel-capitan-america-3.jpg",
+    etiquetas: ["Marvel", "Rankings"],
+    titulos: [],
+    cuerpo: [
+      "## Guardianes de la Galaxia",
+      { afiches: [
+        { foto: "img/marvel-guardianes-1.jpg", titulo: "Guardianes de la Galaxia (2014)" },
+        { foto: "img/marvel-guardianes-2.jpg", titulo: "Guardianes de la Galaxia Vol. 2 (2017)" },
+        { foto: "img/marvel-guardianes-3.jpg", titulo: "Guardianes de la Galaxia Vol. 3 (2023)" }
+      ] },
+      "A mi parecer, la mejor película de las tres es el volumen 3. La historia que narra y los sentimientos encontrados hacen que destaque más.",
+      "## Spider-Man (Tom Holland)",
+      { afiches: [
+        { foto: "img/marvel-spiderman-1.jpg", titulo: "Spider-Man: De regreso a casa (2017)" },
+        { foto: "img/marvel-spiderman-2.jpg", titulo: "Spider-Man: Lejos de casa (2019)" },
+        { foto: "img/marvel-spiderman-3.jpg", titulo: "Spider-Man: Sin camino a casa (2021)" }
+      ] },
+      "Las tres películas son buenas: la historia de un nuevo Spider-Man es atrapante e interesante. No Way Home se destaca más gracias a la nostalgia de los anteriores Spider-Man y su aparición impactante.",
+      "## Deadpool",
+      { afiches: [
+        { foto: "img/marvel-deadpool-1.jpg", titulo: "Deadpool (2016)" },
+        { foto: "img/marvel-deadpool-2.jpg", titulo: "Deadpool 2 (2018)" },
+        { foto: "img/marvel-deadpool-3.jpg", titulo: "Deadpool & Wolverine (2024)" }
+      ] },
+      "Es una trilogía de un superhéroe inmortal que mezcla humor y acción. La mejor, en mi opinión, es la primera, aunque pelea con Deadpool & Wolverine: las referencias a otras películas del UCM y la conexión que tiene con Avengers: Doomsday generan expectativas y atención del público hacia la película.",
+      "## Thor",
+      { afiches: [
+        { foto: "img/marvel-thor-1.jpg", titulo: "Thor (2011)" },
+        { foto: "img/marvel-thor-2.jpg", titulo: "Thor: Un mundo oscuro (2013)" },
+        { foto: "img/marvel-thor-3.jpg", titulo: "Thor: Ragnarok (2017)" }
+      ] },
+      "Thor es un vengador sumamente importante que conecta a Marvel con la mitología nórdica. Es una trilogía criticada más que nada por su segunda película y la diferencia abismal que hay con Thor: Ragnarok, que conecta perfectamente con la historia y con la película siguiente (Avengers: Infinity War).",
+      "## Capitán América",
+      { afiches: [
+        { foto: "img/marvel-capitan-america-1.jpg", titulo: "Capitán América: El primer vengador (2011)" },
+        { foto: "img/marvel-capitan-america-2.jpg", titulo: "Capitán América: El soldado del invierno (2014)" },
+        { foto: "img/marvel-capitan-america-3.jpg", titulo: "Capitán América: Civil War (2016)" }
+      ] },
+      "Uno de los vengadores más queridos. Sus primeras dos películas son buenas, pero lejos la mejor es Civil War: la historia y todos los personajes incluidos hacen que la película se disfrute y no tenga momentos malos. Para muchos, la mejor película de Marvel."
+    ]
+  },
+  {
+    id: "ranking-romanticas-netflix",
+    titulo: "Ranking de 5 películas románticas de Netflix",
+    bajada: "Del primer amor a los vínculos que nacen en circunstancias inesperadas: cinco historias románticas, con reseña y valoración.",
+    autor: "Priscila Alvarado",
+    etiquetas: ["Películas románticas", "Rankings", "Streaming"],
+    titulos: [],
+    cuerpo: [
+      "Este ranking reúne cinco películas románticas asociadas al catálogo de Netflix. La selección está organizada según el interés de sus historias, la construcción de sus personajes y las emociones que transmiten. Cada reseña presenta brevemente el argumento y los temas principales.",
+      "## 1. A todos los chicos de los que me enamoré (2018)",
+      "Género: romance y comedia romántica.",
+      "Lara Jean escribe cartas secretas a los chicos de los que estuvo enamorada, pero su vida cambia cuando esas cartas llegan inesperadamente a sus destinatarios. A partir de ese momento debe enfrentar situaciones incómodas y descubrir qué siente realmente. Es una historia entretenida y emotiva sobre el primer amor, la adolescencia y la identidad.",
+      "## 2. Corazones malheridos (2022)",
+      "Género: romance y drama.",
+      "Cassie, una cantante, y Luke, un militar, aceptan un matrimonio por conveniencia para resolver problemas económicos. Aunque al principio su relación se basa en un acuerdo, con el tiempo comienzan a conocerse y a desarrollar sentimientos verdaderos. La película aborda el amor, los prejuicios y las dificultades personales.",
+      "## 3. La última canción (2010)",
+      "Género: romance y drama familiar.",
+      "Ronnie es una adolescente que pasa el verano junto a su padre, con quien mantiene una relación distante. Durante esa etapa conoce a Will y se enamora, mientras también comienza a reconstruir el vínculo familiar. La historia trata sobre el amor, el perdón, la madurez y las segundas oportunidades.",
+      "## 4. Fabricante de lágrimas (2024)",
+      "Género: romance y drama.",
+      "Nica y Rigel crecieron en un orfanato y, luego de ser adoptados por la misma familia, deben adaptarse a una nueva vida juntos. Entre conflictos, secretos y emociones intensas, ambos descubren un vínculo complejo. La película explora las heridas del pasado, los miedos y la posibilidad de encontrar afecto.",
+      "## 5. A través de mi ventana (2022)",
+      "Género: romance y drama adolescente.",
+      "Raquel está enamorada de su vecino Ares desde hace mucho tiempo. Cuando finalmente comienzan a acercarse, deben enfrentar diferencias personales y familiares que ponen a prueba la relación. La película representa la intensidad del primer amor y los desafíos que aparecen al construir un vínculo.",
+      "## Conclusión",
+      "Estas películas muestran distintas maneras de vivir el amor: los primeros enamoramientos, las relaciones que nacen en circunstancias inesperadas y los vínculos atravesados por conflictos personales o familiares. En conjunto, permiten reconocer cómo el cine romántico representa los sentimientos, las decisiones y el crecimiento de sus personajes.",
+      "La disponibilidad de cada título puede cambiar según el país y la fecha."
+    ]
   }
 ];

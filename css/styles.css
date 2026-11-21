@@ -400,6 +400,13 @@ input:focus, textarea:focus, select:focus, button:focus-visible, a:focus-visible
 .review-signature { margin: -4px 0 10px; text-align: right; color: var(--cream-dim); }
 .review-signature span { font-family: 'Caveat', cursive; font-weight: 700; font-size: 28px; color: var(--gold); display: inline-block; transform: rotate(-2deg); }
 
+/* ---------- filas de afiches dentro de un artículo ---------- */
+.poster-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 14px 0 6px; }
+.poster-strip figure { margin: 0; }
+.poster-strip img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); display: block; transition: transform .3s; }
+.poster-strip img:hover { transform: translateY(-4px); }
+.poster-strip figcaption { font-size: 12px; color: var(--cream-dim); margin-top: 6px; line-height: 1.3; }
+
 /* ---------- reseñas firmadas ---------- */
 .team-review .byline { margin: 4px 0 0; }
 .team-review .admin-sign { margin: 2px 0 6px; font-size: 13px; }

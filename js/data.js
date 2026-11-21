@@ -31,6 +31,10 @@ window.CINELAB_DATA = {
     "Series de Marvel": {
       titulo: "Marvel: por qué sus series siguen conquistando al público",
       intro: "Desde Daredevil y Jessica Jones hasta WandaVision, Loki, Moon Knight y Ms. Marvel, Marvel encontró en la televisión y el streaming una manera diferente de contar sus historias y de acercarnos mucho más a sus personajes. Lo interesante no son solo los superpoderes, sino los personajes, sus conflictos y las decisiones que tienen que tomar."
+    },
+    "Películas románticas": {
+      titulo: "Películas románticas",
+      intro: "Comedias románticas, dramas y romances pensados para el streaming: reseñas que miran más allá del final feliz, con atención a cómo cada película representa el amor, los vínculos y el crecimiento de sus personajes."
     }
   },
 
@@ -331,6 +335,82 @@ window.CINELAB_DATA = {
         cuerpo: [
           "Uno de los aspectos más interesantes de la serie es su profundidad temática. Más allá de las escenas de acción características de Marvel, propone una reflexión sobre la inteligencia artificial, la conciencia, la humanidad y lo que significa tener sentimientos. Visión sufre de su falta de identidad y carga con el peso de su pasado. Tras lo ocurrido en [[wandavision|WandaVision]], Visión se propone saber quién es y averiguar sobre su pasado y su hijo Thomas Maximoff.",
           "Sin embargo, la serie tiene algunos puntos débiles. En determinados momentos, la trama se vuelve demasiado compleja y presenta demasiadas explicaciones sobre el universo de Marvel, lo que puede dificultar la comprensión para quienes no conocen la historia. Además, algunas situaciones podrían haber tenido un mayor desarrollo emocional. Como presentan demasiados personajes nuevos, es complicado empatizar con lo que pasa en la serie."
+        ]
+      }
+    },
+    {
+      id: "gente-que-conocemos-en-vacaciones",
+      titulo: "Gente que conocemos en vacaciones",
+      categoria: "Películas románticas",
+      tipo: "Película",
+      anio: "2026",
+      anioNum: 2026,
+      reparto: "Basada en la novela de Emily Henry",
+      detalles: "Título original: People We Meet on Vacation",
+      rating: null,
+      sinopsis: "Dos mejores amigos con tensión sentimental repasan, entre saltos temporales, los viajes que hicieron juntos y la última excursión que pone a prueba su vínculo. Adaptación de la novela de Emily Henry.",
+      resena: {
+        autor: "Facundo Britez",
+        cuerpo: [
+          "La película se inserta dentro de la renovación contemporánea de la comedia romántica para plataformas de streaming, un subgénero que recicla la figura de los “mejores amigos con tensión sentimental” ya consolidada en la novela original de Emily Henry. La narrativa recurre a una estructura de saltos temporales que va alternando los viajes pasados y la última excursión de la pareja protagónica, con el objetivo de dar cuenta del desgaste progresivo de su vínculo afectivo. Formalmente, la propuesta funciona en sus momentos de mayor contención, como la escena de la fiebre en Noruega, donde se reduce la banda sonora para centrarse en la intimidad de los personajes; sin embargo, la adaptación suaviza la voz introspectiva e irónica del texto literario.",
+          "Esta simplificación traslada la historia hacia una estética más cercana a la postal turística. Los escenarios, entre ellos Barcelona, funcionan más como atractivo visual para el catálogo de la plataforma que como espacio con significado dramático. A nivel de análisis cultural, el éxito masivo de la producción no responde únicamente a su calidad cinematográfica, sino a una demanda del público por historias románticas predecibles y reconfortantes. El filme termina siendo un producto correcto, pero poco arriesgado: reproduce los códigos del género sin profundizar en la complejidad emocional que hacía atractiva la obra original."
+        ]
+      }
+    },
+    {
+      id: "el-encanto-del-champan",
+      titulo: "El encanto del champán",
+      categoria: "Películas románticas",
+      tipo: "Película",
+      anio: "2025",
+      anioNum: 2025,
+      reparto: "Minka Kelly",
+      detalles: "Título original: Champagne Problems",
+      rating: null,
+      sinopsis: "Una ejecutiva estadounidense agobiada por el mundo corporativo viaja a Francia para cerrar la compra de un viñedo de champán y termina enamorándose de un heredero local, en un romance pensado para la época navideña.",
+      resena: {
+        autor: "Facundo Britez",
+        cuerpo: [
+          "Esta obra ejemplifica el modelo de romance estacional pensado para la época navideña, con todos los rasgos típicos de la producción para streaming: protagonista profesional agobiada por el mundo corporativo, escenario europeo pintoresco, conflicto comercial y romance con un heredero local. Si bien la previsibilidad es un rasgo esperable dentro de este tipo de relatos, la crítica principal apunta a su construcción ideológica. La historia opone dos mundos: el capitalismo agresivo estadounidense, encarnado por la ejecutiva protagonista, y la tradición artesanal francesa representada por el viñedo de champán.",
+          "La resolución del conflicto no cuestiona la lógica de las compras empresariales, sino que propone una especie de “capitalismo bondadoso”: la protagonista aprende a valorar la tradición sin modificar de raíz su forma de trabajar. Se trata de una fantasía muy recurrente en las películas románticas actuales, donde el desarrollo personal se reduce a un cambio de actitud superficial. La fotografía cuidada y la actuación de Minka Kelly logran sostener la cinta, pero no alcanzan para disimular que es una narración muy cómoda, que no invita a reflexionar más allá de la entretención ligera."
+        ]
+      }
+    },
+    {
+      id: "mi-lista-de-deseos",
+      titulo: "Mi lista de deseos",
+      categoria: "Películas románticas",
+      tipo: "Película",
+      anio: "2025",
+      anioNum: 2025,
+      reparto: "Sofía Carson",
+      detalles: "Título original: The Life List",
+      rating: null,
+      sinopsis: "Tras la muerte de su madre, una joven emprende un recorrido de autodescubrimiento siguiendo la lista de sueños que escribió en su adolescencia.",
+      resena: {
+        autor: "Facundo Britez",
+        cuerpo: [
+          "De las cuatro propuestas, esta es la que presenta la premisa narrativa más interesante, al vincular el duelo por la madre fallecida con un recorrido de autodescubrimiento a partir de la lista de sueños que la protagonista escribió en su adolescencia. La estructura, en episodios donde cada meta cumplida funciona como un reencuentro con la versión más joven de sí misma, abre la posibilidad de analizar la tensión entre la niñez soñada y la adultez real. La actuación de Sofía Carson consigue transmitir la vulnerabilidad del personaje, especialmente en las escenas relacionadas con la pérdida.",
+          "No obstante, la historia cae en una contradicción central: la “libertad” y el autoconocimiento de la mujer adulta dependen de las instrucciones que le dejó su madre. Desde una lectura de género, se puede interpretar que el relato reproduce una idea limitada del crecimiento personal: la protagonista no construye su identidad por sí misma, sino que la recupera siguiendo un plan ajeno. A su vez, la subtrama romántica se siente forzada, agregada por cumplir con las reglas del género y no por una necesidad propia de la historia. Aun así, es la más cercana a un drama maduro, y explica su recepción positiva por parte de espectadores que se identifican con la nostalgia por los sueños de juventud."
+        ]
+      }
+    },
+    {
+      id: "mensajes-de-voz-para-isabelle",
+      titulo: "Mensajes de voz para Isabelle",
+      categoria: "Películas románticas",
+      tipo: "Película",
+      anio: "2026",
+      anioNum: 2026,
+      reparto: "Zoey Deutch",
+      detalles: "Título original: Voicemails for Isabelle",
+      rating: null,
+      sinopsis: "Un hombre escucha los mensajes de voz de una mujer sin que ella lo sepa y, a partir de esos audios, construye una imagen idealizada de ella; después la busca para conocerla.",
+      resena: {
+        autor: "Facundo Britez",
+        cuerpo: [
+          "Es la más original y compleja de las cuatro, ya que usa la tecnología de los mensajes de voz como eje central de la relación sentimental. Durante gran parte de la película, los protagonistas no se ven cara a cara: el vínculo se construye de forma asimétrica, porque él escucha los audios de ella sin que ella lo sepa. Este recurso permite reflexionar sobre las formas de amar en la actualidad, donde es muy frecuente construir una imagen idealizada de la otra persona a partir de fragmentos: audios, mensajes y publicaciones digitales.",
+          "Aquí aparece el punto más polémico de la obra: la figura masculina accede a información muy íntima de la protagonista sin su consentimiento, la investiga y viaja para buscarla. La película intenta presentar esa conducta como romántica, pero una lectura crítica la vincula con una representación problemática de la conquista amorosa. Si bien Zoey Deutch brilla en sus monólogos por teléfono y la dirección logra mantener la tensión emocional, la resolución del conflicto es demasiado rápida: el enfado de la protagonista dura muy poco tiempo antes del final feliz. Por eso es la más rica para debatir: funciona como un espejo de los relatos románticos modernos y sus mensajes muchas veces contradictorios sobre el amor."
         ]
       }
     }
