@@ -311,6 +311,8 @@
 
   // ------------------------------------------------------------------ router
   function currentRoute() {
+    // El enlace de un mail de Supabase ("#access_token=..." o "#error=...") no es una página.
+    if (/access_token=|error=/.test(location.hash)) return { page: "inicio", arg: null };
     const [page, arg] = location.hash.replace(/^#\/?/, "").split("/");
     return { page: page || "inicio", arg: arg ? decodeURIComponent(arg) : null };
   }
@@ -1163,6 +1165,7 @@
         <label>Contraseña<input name="password" type="password" autocomplete="${signup ? "new-password" : "current-password"}" required minlength="6"></label>
         <p class="form-error" id="authError"></p>
         <button class="btn btn-block" type="submit">${signup ? "Crear cuenta" : "Ingresar"}</button>
+        ${signup ? "" : `<button type="button" class="link-btn forgot" data-action="open-forgot">¿Olvidaste tu contraseña?</button>`}
       </form>
       <p class="muted small-print">No hace falta una cuenta para ver el sitio: solo para reseñar, dar likes y ganar medallas.
       ${Store.mode === "demo" ? "<br><strong>Modo demo:</strong> las cuentas se guardan solo en este navegador." : ""}</p>`);
@@ -1194,8 +1197,66 @@
     });
   }
 
+  // ------------------------------------------------------ recuperar contraseña
+  function openForgot(email) {
+    openModal(`
+      <h2>Recuperar contraseña</h2>
+      <p class="muted">Te mandamos un mail con un enlace para elegir una contraseña nueva.</p>
+      <form id="forgotForm" class="auth-form">
+        <label>Email de tu cuenta<input name="email" type="email" autocomplete="email" required value="${esc(email || "")}"></label>
+        <p class="form-error" id="forgotError"></p>
+        <button class="btn btn-block" type="submit">Mandar enlace</button>
+      </form>
+      <p class="small-print"><button class="link-btn" data-action="open-auth">← Volver a Ingresar</button></p>`);
+    $("#forgotForm input").focus();
+    $("#forgotForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const btn = e.target.querySelector("[type=submit]");
+      btn.disabled = true;
+      try {
+        await Store.resetPassword(e.target.email.value);
+        openModal(`<h2>Revisá tu email</h2>
+          <p>Si hay una cuenta con ese email, te llega un enlace para elegir una contraseña nueva. Puede tardar unos minutos: revisá también la carpeta de spam.</p>`);
+      } catch (err) {
+        $("#forgotError").textContent = err.message;
+        btn.disabled = false;
+      }
+    });
+  }
+
+  function openNewPassword() {
+    openModal(`
+      <h2>Elegí tu contraseña nueva</h2>
+      <form id="newPassForm" class="auth-form">
+        <label>Contraseña nueva<input name="password" type="password" autocomplete="new-password" required minlength="6"></label>
+        <label>Repetila<input name="password2" type="password" autocomplete="new-password" required minlength="6"></label>
+        <p class="form-error" id="newPassError"></p>
+        <button class="btn btn-block" type="submit">Guardar contraseña</button>
+      </form>`);
+    $("#newPassForm input").focus();
+    $("#newPassForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const form = e.target;
+      if (form.password.value !== form.password2.value) {
+        $("#newPassError").textContent = "Las contraseñas no coinciden.";
+        return;
+      }
+      const btn = form.querySelector("[type=submit]");
+      btn.disabled = true;
+      try {
+        await Store.updatePassword(form.password.value);
+        closeModal();
+        toast("¡Listo! Tu contraseña se cambió.");
+      } catch (err) {
+        $("#newPassError").textContent = err.message;
+        btn.disabled = false;
+      }
+    });
+  }
+
   // ------------------------------------------------------------------ eventos
   const actions = {
+    "open-forgot": () => { const input = $("#authForm [name=email]"); openForgot(input ? input.value : ""); },
     "open-auth": el => openAuth(el.dataset.tab),
     "auth-tab": el => openAuth(el.dataset.tab),
     "close-modal": closeModal,
@@ -1346,5 +1407,13 @@
     }
     state.user = Store.user();
     await reload();
+    // Si se llegó desde el enlace de un mail de Supabase.
+    const link = Store.authLink();
+    if (link.error) {
+      openModal(`<h2>El enlace no funciona</h2><p>${esc(link.error)}</p>
+        <button class="btn" data-action="open-forgot">Pedir un enlace nuevo</button>`);
+    } else if (link.recovery) {
+      openNewPassword();
+    }
   })();
 })();

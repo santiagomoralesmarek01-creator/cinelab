@@ -284,6 +284,7 @@ input:focus, textarea:focus, select:focus, button:focus-visible, a:focus-visible
 .tabs button { flex: 1; background: none; border: none; border-bottom: 2px solid transparent; color: var(--cream-dim); padding: 10px; cursor: pointer; font-size: 15px; font-family: 'Oswald', sans-serif; letter-spacing: .04em; }
 .tabs button.active { color: var(--gold); border-bottom-color: var(--gold); }
 .auth-form { display: grid; gap: 14px; }
+.auth-form .forgot { justify-self: center; font-size: 13px; }
 .notice { background: var(--gold-soft); color: var(--cream); padding: 10px 14px; border-radius: 8px; font-size: 14px; }
 .small-print { font-size: 12px; margin: 18px 0 0; }
 

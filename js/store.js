@@ -10,6 +10,19 @@
   const listeners = [];
   let current = null;
 
+  // Enlaces de los mails de Supabase (recuperar contraseña, confirmar cuenta).
+  // Vuelven al sitio como "#access_token=...&type=recovery" o "#error=...".
+  const authHash = new URLSearchParams(location.hash.replace(/^#\/?/, ""));
+  const authLink = {
+    present: authHash.has("access_token") || authHash.has("error"),
+    recovery: authHash.get("type") === "recovery" && authHash.has("access_token"),
+    error: authHash.has("error")
+      ? (/expired|invalid/i.test(authHash.get("error_description") || "")
+        ? "El enlace venció o ya se usó. Pedí uno nuevo."
+        : "No pudimos validar el enlace. Pedí uno nuevo.")
+      : null
+  };
+
   function emit() { listeners.forEach(fn => fn(current)); }
 
   function validate({ email, password, username }, isSignUp) {
@@ -136,6 +149,17 @@
       LS.set("session", user.id);
       current = publicUser(user);
       emit();
+    },
+    async resetPassword() {
+      throw new Error("En modo demo no se pueden recuperar contraseñas (no hay servidor de mails).");
+    },
+    async updatePassword(password) {
+      if (!current) throw new Error("Tenés que ingresar.");
+      if (!password || password.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres.");
+      const users = LS.get("users", []);
+      const u = users.find(x => x.id === current.id);
+      u.pass = await hash(u.email + ":" + password);
+      LS.save("users", users);
     },
     async signOut() {
       LS.set("session", null);
@@ -278,6 +302,8 @@
     if (/Invalid login credentials/i.test(error.message)) throw new Error("Email o contraseña incorrectos.");
     if (/already registered/i.test(error.message)) throw new Error("Ya existe una cuenta con ese email.");
     if (/Email not confirmed/i.test(error.message)) throw new Error("Confirmá tu email antes de ingresar (revisá tu casilla).");
+    if (/should be different from the old password/i.test(error.message)) throw new Error("La contraseña nueva tiene que ser distinta de la anterior.");
+    if (/Auth session missing/i.test(error.message)) throw new Error("El enlace venció o ya se usó. Pedí uno nuevo.");
     if (/rate limit|only request this after/i.test(error.message)) {
       throw new Error("Hubo demasiados registros o intentos seguidos. Probá de nuevo en unos minutos.");
     }
@@ -299,11 +325,13 @@
     mode: "supabase",
     async init() {
       await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");
-      // PKCE: el link de confirmación de email vuelve con "?code=" y no con "#",
-      // que es lo que usa el router del sitio.
-      sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, { auth: { flowType: "pkce" } });
+      // Flujo "implicit": los enlaces de los mails (recuperar contraseña, confirmar
+      // cuenta) funcionan aunque se abran en otro navegador o en el celular.
+      sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, { auth: { flowType: "implicit", detectSessionInUrl: true } });
       const { data } = await sb.auth.getSession();
       current = await userFromSession(data.session);
+      // Una vez leído el enlace, se limpia la dirección para que el sitio vuelva al inicio.
+      if (authLink.present) history.replaceState(null, "", location.pathname + location.search + "#/");
       sb.auth.onAuthStateChange((_event, session) => {
         // Se difiere para no llamar a Supabase dentro del propio callback.
         setTimeout(async () => {
@@ -329,6 +357,14 @@
       check(res);
       current = await userFromSession(res.data.session);
       emit();
+    },
+    async resetPassword(email) {
+      if (!email || !/^\S+@\S+\.\S+$/.test(email.trim())) throw new Error("Ingresá un email válido.");
+      check(await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + location.pathname }));
+    },
+    async updatePassword(password) {
+      if (!password || password.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres.");
+      check(await sb.auth.updateUser({ password }));
     },
     async signOut() {
       await sb.auth.signOut();
@@ -450,6 +486,8 @@
 
   window.CinelabStore = Object.assign({}, impl, {
     user: () => current,
+    // Qué trajo el enlace del mail: recuperar contraseña (con sesión iniciada) o un error.
+    authLink: () => ({ recovery: authLink.recovery && Boolean(current), error: authLink.error }),
     onAuthChange(fn) { listeners.push(fn); },
     // Solo se muestran fotos propias del sitio (Supabase Storage o, en demo, guardadas en el navegador).
     isSafeImage(url) {
