@@ -402,6 +402,7 @@ input:focus, textarea:focus, select:focus, button:focus-visible, a:focus-visible
 
 /* ---------- reseñas firmadas ---------- */
 .team-review .byline { margin: 4px 0 0; }
+.team-review .admin-sign { margin: 2px 0 6px; font-size: 13px; }
 .team-review .review-body { margin-top: 14px; border-top: 0; padding-top: 0; }
 .team-review .review-body p, .team-review .review-body li { font-size: 16px; color: var(--cream); }
 .team-review .review-body h3 { font-size: 18px; margin: 22px 0 4px; }

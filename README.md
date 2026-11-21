@@ -25,6 +25,9 @@ Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni co
   Las fotos se achican automáticamente antes de subirse. Mientras un título no tenga foto, se muestra un afiche generado.
 - **Artículos firmados**: cada artículo muestra su firma (autor/a) arriba y una firma manuscrita al final.
   El admin la edita desde el sitio (✍️ Firmar) o se puede poner `autor` en `js/articles.js`.
+- **Reseñas firmadas de cada título**: la reseña de cada película o serie muestra quién la escribió.
+  Se carga en `resena.autor` dentro de `js/data.js`, o un admin la firma o cambia desde el sitio
+  (✍️ Firmar en la ficha o en el Panel de administración). Pide nombre y apellido.
 - **Reseñas firmadas**: al escribir una reseña se puede poner una firma opcional (nombre y apellido), que se
   muestra manuscrita al final. Requiere ejecutar [`supabase/firma.sql`](supabase/firma.sql) (ya incluido en `instalar-todo.sql`).
 - **Varias reseñas por título para los admins**: los usuarios comunes tienen una reseña por título; los admins

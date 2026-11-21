@@ -86,7 +86,12 @@
   function articlePhoto(a) { return safeImg(state.content["img:article:" + a.id]) || staticImg(a.foto); }
 
   // Reseña de la ficha: firmada (resena.autor) o la reseña del equipo de siempre.
-  function itemReview(i) { return i.resena || (i.resenaEquipo ? { cuerpo: [i.resenaEquipo] } : null); }
+  // La firma que pone un admin desde el sitio tiene prioridad sobre la de data.js.
+  function itemReview(i) {
+    const base = i.resena || (i.resenaEquipo ? { cuerpo: [i.resenaEquipo] } : null);
+    const firma = state.content["author:item:" + i.id];
+    return base && firma ? Object.assign({}, base, { autor: firma }) : base;
+  }
 
   // Párrafos, subtítulos ("## ") y listas, con enlaces [[id]] a las fichas.
   function renderBlocks(cuerpo) {
@@ -447,7 +452,7 @@
     const ultimas = state.reviews.slice(0, 3);
     const feat = featuredReview();
     // Las últimas reseñas firmadas que se sumaron al catálogo.
-    const firmadas = items.filter(i => i.resena && i.resena.autor).slice(-3).reverse();
+    const firmadas = items.filter(i => (itemReview(i) || {}).autor).slice(-3).reverse();
     const medals = ["🎬", "👏", "🔥", "🧭", "🦇", "🚩"];
     const title = "Encontrá qué ver, sin dar tantas vueltas.".split(" ")
       .map((w, n) => `<span class="w" style="--i:${n}">${esc(w)}</span>`).join(" ");
@@ -687,6 +692,7 @@
       <section class="team-review${res.autor ? " signed" : ""}">
         <p class="cat">${res.autor ? "Reseña firmada" : "Reseña del equipo"}</p>
         <h2>${res.titulo ? esc(res.titulo) : res.autor ? "La reseña de " + esc(res.autor) : "La reseña del equipo"}</h2>
+        ${isAdmin() ? `<button class="link-btn admin-sign" data-action="item-sign" data-id="${esc(i.id)}">✍️ ${res.autor ? "Cambiar firma" : "Firmar esta reseña"}</button>` : ""}
         ${res.autor ? `<p class="byline">${avatar(res.autor)} <span>Por <strong>${esc(res.autor)}</strong>${res.calificacion ? `<br><small>Calificación: ${esc(res.calificacion)}</small>` : ""}</span></p>` : ""}
         <div class="article-body review-body${long ? " collapsed" : ""}">${renderBlocks(res.cuerpo)}</div>
         ${long ? `<button class="link-btn read-more" data-action="expand-review">Leer la reseña completa ↓</button>` : ""}
@@ -848,26 +854,37 @@
         </section>` : ""}`;
   }
 
-  function openSignModal(id) {
-    const a = articulosById[id];
-    if (!a) return;
+  // Firma (nombre y apellido) de un artículo o de la reseña de un título. Se guarda
+  // en site_content y reemplaza a la que viene en los archivos de datos.
+  function openSignModal(kind, id) {
+    const target = kind === "article" ? articulosById[id] : itemsById[id];
+    if (!target) return;
+    const key = "author:" + kind + ":" + id;
+    const current = kind === "article" ? articleAuthorRaw(target) : ((itemReview(target) || {}).autor || "");
+    const original = (kind === "article" ? target.autor : (target.resena || {}).autor) || "";
+    const fallback = original ? `la firma original (${original})` : kind === "article" ? "“Equipo CineLab”" : "“La reseña del equipo”";
     openModal(`
-      <h2>Firmar artículo</h2>
-      <p class="muted">${esc(a.titulo)}</p>
+      <h2>${kind === "article" ? "Firmar artículo" : "Firmar reseña"}</h2>
+      <p class="muted">${esc(target.titulo)}</p>
       <form id="signForm" class="auth-form">
-        <label>Firma (quién lo escribió)
-          <input name="autor" list="teamNames" maxlength="80" value="${esc(articleAuthorRaw(a))}" placeholder="ej: Rocío Stagno">
+        <label>Nombre y apellido de quien la escribió
+          <input name="autor" list="teamNames" maxlength="80" autocomplete="off" value="${esc(current)}" placeholder="ej: Rocío Stagno">
         </label>
         <datalist id="teamNames">${(equipo || []).map(n => `<option value="${esc(n)}">`).join("")}</datalist>
+        <p class="form-error" id="signError"></p>
         <button class="btn btn-block" type="submit">Guardar firma</button>
       </form>
-      <p class="muted small-print">Si lo dejás vacío, el artículo se firma como “Equipo CineLab”.</p>`);
+      <p class="muted small-print">Si lo dejás vacío, vuelve a ${esc(fallback)}.</p>`);
     $("#signForm input").focus();
     $("#signForm").addEventListener("submit", async e => {
       e.preventDefault();
-      const value = e.target.autor.value.trim();
+      const value = e.target.autor.value.trim().replace(/\s+/g, " ");
+      if (value && value.split(" ").length < 2) {
+        $("#signError").textContent = "Escribí nombre y apellido.";
+        return;
+      }
       closeModal();
-      await runAndReload(() => Store.setSiteContent("author:article:" + id, value || null), "Firma guardada.");
+      await runAndReload(() => Store.setSiteContent(key, value || null), value ? "Firma guardada." : "Se quitó la firma.");
     });
   }
 
@@ -893,6 +910,7 @@
                 ${poster(i, "poster-thumb")}
                 <a class="admin-name" href="#/titulo/${esc(i.id)}"><strong>${esc(i.titulo)}</strong><small>${esc(i.tipo)} · ${esc(i.anio)} · comunidad ${communityScore(i.id) || "–"}</small></a>
                 <span class="admin-photo">
+                  ${itemReview(i) ? `<button class="link-btn" data-action="item-sign" data-id="${esc(i.id)}" title="Firma de la reseña">✍️ ${itemReview(i).autor ? esc(itemReview(i).autor) : "Firmar reseña"}</button>` : ""}
                   <button class="link-btn" data-action="item-photo" data-id="${esc(i.id)}">📷 ${itemPhoto(i) ? "Cambiar" : "Foto"}</button>
                   ${itemPhoto(i) ? `<button class="link-btn danger" data-action="item-photo-clear" data-id="${esc(i.id)}">Quitar foto</button>` : ""}
                 </span>
@@ -1260,7 +1278,8 @@
     "article-photo-clear": el => {
       if (confirm("¿Quitar la portada de este artículo?")) runAndReload(() => Store.setSiteContent("img:article:" + el.dataset.id, null), "Se quitó la portada.");
     },
-    "article-sign": el => openSignModal(el.dataset.id),
+    "article-sign": el => openSignModal("article", el.dataset.id),
+    "item-sign": el => openSignModal("item", el.dataset.id),
     "review-photo": el => uploadAndApply("media", url => Store.setReviewPhoto(el.dataset.id, url), "Foto agregada a la reseña."),
     "review-photo-clear": el => {
       if (confirm("¿Quitar la foto de esta reseña?")) runAndReload(() => Store.setReviewPhoto(el.dataset.id, null), "Se quitó la foto de la reseña.");
