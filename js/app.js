@@ -80,8 +80,20 @@
     return opts.href ? `<a class="${cls}" href="${opts.href}">${inner}</a>` : `<span class="${cls}">${inner}</span>`;
   }
 
-  function itemPhoto(i) { return safeImg(state.content["img:item:" + i.id]); }
-  function articlePhoto(a) { return safeImg(state.content["img:article:" + a.id]); }
+  // Foto subida por el admin o, si no hay, la que viene con los datos (carpeta img/).
+  function staticImg(path) { return typeof path === "string" && /^img\/[\w.-]+$/.test(path) ? path : null; }
+  function itemPhoto(i) { return safeImg(state.content["img:item:" + i.id]) || staticImg(i.foto); }
+  function articlePhoto(a) { return safeImg(state.content["img:article:" + a.id]) || staticImg(a.foto); }
+
+  // Reseña de la ficha: firmada (resena.autor) o la reseña del equipo de siempre.
+  function itemReview(i) { return i.resena || (i.resenaEquipo ? { cuerpo: [i.resenaEquipo] } : null); }
+
+  // Párrafos, subtítulos ("## ") y listas, con enlaces [[id]] a las fichas.
+  function renderBlocks(cuerpo) {
+    return cuerpo.map(b => Array.isArray(b)
+      ? `<ul>${b.map(li => `<li>${richText(li)}</li>`).join("")}</ul>`
+      : b.startsWith("## ") ? `<h3>${richText(b.slice(3))}</h3>` : `<p>${richText(b)}</p>`).join("");
+  }
   function articleAuthorRaw(a) { return state.content["author:article:" + a.id] || a.autor || ""; }
   function articleAuthor(a) { return articleAuthorRaw(a) || "Equipo CineLab"; }
 
@@ -327,6 +339,7 @@
           <h3>${esc(i.titulo)}</h3>
           <p class="meta">${esc(i.tipo)} · ${esc(i.anio)}</p>
           <p class="snippet">${esc(i.sinopsis)}</p>
+          ${itemReview(i) && itemReview(i).autor ? `<p class="card-sign">✍️ Reseña de ${esc(itemReview(i).autor)}</p>` : ""}
           <p class="card-foot">${n ? `💬 ${n} ${n === 1 ? "reseña" : "reseñas"} · comunidad ${community}` : "Sin reseñas todavía"}${state.watchlist.includes(i.id) ? " · 📌 en tu lista" : ""}</p>
         </div>
       </a>`;
@@ -433,6 +446,8 @@
     const top = items.filter(i => i.top).sort((a, b) => a.top - b.top);
     const ultimas = state.reviews.slice(0, 3);
     const feat = featuredReview();
+    // Las últimas reseñas firmadas que se sumaron al catálogo.
+    const firmadas = items.filter(i => i.resena && i.resena.autor).slice(-3).reverse();
     const medals = ["🎬", "👏", "🔥", "🧭", "🦇", "🚩"];
     const title = "Encontrá qué ver, sin dar tantas vueltas.".split(" ")
       .map((w, n) => `<span class="w" style="--i:${n}">${esc(w)}</span>`).join(" ");
@@ -475,6 +490,12 @@
             </a></li>`).join("")}
         </ol>
       </section>
+
+      ${firmadas.length ? `
+      <section class="section">
+        <div class="section-head"><h2>Reseñas firmadas por el equipo</h2><a href="#/catalogo">Ver catálogo →</a></div>
+        <div class="grid">${firmadas.map(card).join("")}</div>
+      </section>` : ""}
 
       ${feat ? featuredHtml(feat) : ""}
 
@@ -522,7 +543,7 @@
         ${cats.map(c => `<button class="chip${c === f.cat ? " active" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`).join("")}
       </div>
       <div class="controls filters">
-        <label>Tipo<select id="fTipo">${["Todos", "Película", "Serie"].map(t => opt(t, t, f.tipo)).join("")}</select></label>
+        <label>Tipo<select id="fTipo">${["Todos"].concat(Array.from(new Set(items.map(i => i.tipo)))).map(t => opt(t, t, f.tipo)).join("")}</select></label>
         <label>Año<select id="fAnio">${opt("Todos", "Todos", f.anio)}${anios.map(a => opt(a, a, f.anio)).join("")}</select></label>
         <label>Valoración<select id="fMin">${[["0", "Todas"], ["8", "8 o más"], ["8.5", "8.5 o más"], ["9", "9 o más"]].map(([v, l]) => opt(v, l, f.min)).join("")}</select></label>
         <label>Ordenar<select id="fOrden">${[["rating", "Mejor valorados"], ["recientes", "Más recientes"], ["resenas", "Más reseñados"], ["az", "A–Z"]].map(([v, l]) => opt(v, l, f.orden)).join("")}</select></label>
@@ -552,7 +573,7 @@
       (f.tipo === "Todos" || i.tipo === f.tipo) &&
       (f.anio === "Todos" || String(i.anioNum) === f.anio) &&
       score(i) >= Number(f.min) &&
-      (!q || [i.titulo, i.reparto, i.categoria, i.sinopsis].join(" ").toLowerCase().includes(q)));
+      (!q || [i.titulo, i.reparto, i.categoria, i.sinopsis, (itemReview(i) || {}).autor].join(" ").toLowerCase().includes(q)));
     const sorters = {
       rating: (a, b) => score(b) - score(a),
       recientes: (a, b) => b.anioNum - a.anioNum,
@@ -576,9 +597,10 @@
   // ------------------------------------------------------- ficha de un título
   function mediaAdmin(kind, id, hasPhoto) {
     if (!isAdmin()) return "";
+    const uploaded = Boolean(state.content["img:" + kind + ":" + id]);
     return `<div class="media-admin">
       <button class="btn btn-small" data-action="${kind}-photo" data-id="${esc(id)}">📷 ${hasPhoto ? "Cambiar foto" : "Agregar foto"}</button>
-      ${hasPhoto ? `<button class="btn btn-small btn-dark" data-action="${kind}-photo-clear" data-id="${esc(id)}">Quitar</button>` : ""}
+      ${uploaded ? `<button class="btn btn-small btn-dark" data-action="${kind}-photo-clear" data-id="${esc(id)}">Quitar</button>` : ""}
     </div>`;
   }
 
@@ -605,7 +627,7 @@
         <div class="title-main">
           <p class="cat">${esc(i.categoria)}</p>
           <h1>${esc(i.titulo)}</h1>
-          <p class="meta">${esc(i.tipo)} · ${esc(i.anio)}<br>${esc(i.reparto)}</p>
+          <p class="meta">${esc(i.tipo)} · ${esc(i.anio)}<br>${esc(i.reparto)}${i.detalles ? `<br>${esc(i.detalles)}` : ""}</p>
           <p class="synopsis">${esc(i.sinopsis)}</p>
           <div class="hero-actions">
             <button class="btn${inList ? " btn-ghost" : ""}" data-action="watch" data-id="${esc(i.id)}">${inList ? "✓ En tu lista" : "📌 Quiero verla"}</button>
@@ -619,7 +641,7 @@
         </aside>
       </section>
 
-      ${i.resenaEquipo ? `<section class="team-review"><h2>La reseña del equipo</h2><p>${esc(i.resenaEquipo)}</p></section>` : ""}
+      ${teamReviewHtml(i)}
 
       ${photos.length ? `
       <section class="section">
@@ -654,6 +676,22 @@
 
     const form = $("#reviewEditor");
     if (form) bindReviewForm(form, i, mine);
+  }
+
+  function teamReviewHtml(i) {
+    const res = itemReview(i);
+    if (!res) return "";
+    const words = res.cuerpo.flat().join(" ").split(/\s+/).length;
+    const long = words > 230;
+    return `
+      <section class="team-review${res.autor ? " signed" : ""}">
+        <p class="cat">${res.autor ? "Reseña firmada" : "Reseña del equipo"}</p>
+        <h2>${res.titulo ? esc(res.titulo) : res.autor ? "La reseña de " + esc(res.autor) : "La reseña del equipo"}</h2>
+        ${res.autor ? `<p class="byline">${avatar(res.autor)} <span>Por <strong>${esc(res.autor)}</strong>${res.calificacion ? `<br><small>Calificación: ${esc(res.calificacion)}</small>` : ""}</span></p>` : ""}
+        <div class="article-body review-body${long ? " collapsed" : ""}">${renderBlocks(res.cuerpo)}</div>
+        ${long ? `<button class="link-btn read-more" data-action="expand-review">Leer la reseña completa ↓</button>` : ""}
+        ${res.autor ? `<footer class="team-sign"><span class="signature-name">${esc(res.autor)}</span><small>CineLab</small></footer>` : ""}
+      </section>`;
   }
 
   function photoField(url) {
@@ -776,9 +814,6 @@
     const others = articulos.filter(x => x !== a).slice(0, 3);
     const photo = articlePhoto(a);
     const author = articleAuthor(a);
-    const block = b => Array.isArray(b)
-      ? `<ul>${b.map(li => `<li>${richText(li)}</li>`).join("")}</ul>`
-      : b.startsWith("## ") ? `<h2>${richText(b.slice(3))}</h2>` : `<p>${richText(b)}</p>`;
     document.title = a.titulo + " — CineLab";
     app.innerHTML = `
       <nav class="crumbs"><a href="#/articulos">Artículos</a> / <span>${a.etiquetas.map(esc).join(" · ")}</span></nav>
@@ -795,7 +830,7 @@
             ${photo ? `<img src="${esc(photo)}" alt="">` : `<span class="muted">Sin foto de portada</span>`}
             ${mediaAdmin("article", a.id, Boolean(photo))}
           </div>` : ""}
-        <div class="article-body">${a.cuerpo.map(block).join("")}</div>
+        <div class="article-body">${renderBlocks(a.cuerpo).replace(/<(\/?)h3>/g, "<$1h2>")}</div>
         <footer class="signature">
           <span class="signature-name">${esc(author)}</span>
           <span class="signature-role">CineLab · Proyecto Laboratorio de Medios Gráficos, UMET</span>
@@ -1140,6 +1175,11 @@
     logout: async () => { await Store.signOut(); location.hash = "#/"; toast("Cerraste sesión. ¡Hasta la próxima función!"); },
     random: spinRoulette,
     retry: () => location.reload(),
+    "expand-review": el => {
+      const body = el.parentNode.querySelector(".review-body");
+      if (body) body.classList.remove("collapsed");
+      el.remove();
+    },
     zoom: el => { if (safeImg(el.dataset.src)) openModal(`<img class="lightbox-img" src="${esc(el.dataset.src)}" alt="Foto ampliada">`, "modal-wide"); },
     "reviews-cat": el => { state.resenas.cat = el.dataset.cat; render(); },
     "reviews-order": el => { state.resenas.orden = el.dataset.order; render(); },
