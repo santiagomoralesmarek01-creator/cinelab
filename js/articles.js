@@ -9,9 +9,11 @@
 // [[id-del-titulo|otro texto]] hace lo mismo mostrando otro texto.
 // `titulos` lista las fichas que se muestran al final del artículo.
 // `autor` firma el artículo y `foto` (ruta a una imagen en img/) es su portada.
+// `tipo`: "ranking" (aparece en la pestaña Rankings) o "critica" (notas, análisis e informes).
 window.CINELAB_ARTICULOS = [
   {
     id: "marvel-series",
+    tipo: "critica",
     titulo: "Marvel: por qué sus series siguen conquistando al público",
     bajada: "Más allá de los superpoderes, las series de Marvel encontraron en el streaming una forma de acercarnos a sus personajes.",
     etiquetas: ["Series de Marvel", "Superhéroes"],
@@ -28,6 +30,7 @@ window.CINELAB_ARTICULOS = [
   },
   {
     id: "cris-morena",
+    tipo: "critica",
     titulo: "Cris Morena: el fenómeno que marcó a generaciones",
     bajada: "Música, historias de crecimiento y personajes inolvidables: cómo sus series transformaron la televisión juvenil argentina.",
     etiquetas: ["Series infantojuveniles", "Televisión argentina"],
@@ -61,6 +64,7 @@ window.CINELAB_ARTICULOS = [
   },
   {
     id: "thrillers-actuacion",
+    tipo: "critica",
     titulo: "Thrillers y policiales: lo que se cuenta en los silencios",
     bajada: "Una mirada actoral sobre el género, con Barreda como ejemplo de composición de personaje.",
     etiquetas: ["Thrillers / Policiales", "Actuación"],
@@ -76,6 +80,7 @@ window.CINELAB_ARTICULOS = [
   },
   {
     id: "top-terror-2025",
+    tipo: "ranking",
     titulo: "Top 3: las películas de terror de 2025",
     bajada: "Historia, actuaciones y la forma de generar miedo: nuestro ranking combina la crítica, el público y nuestra opinión.",
     etiquetas: ["Terror y Suspenso", "Rankings"],
@@ -93,6 +98,7 @@ window.CINELAB_ARTICULOS = [
   },
   {
     id: "evolucion-thriller-argentino",
+    tipo: "critica",
     titulo: "Evolución del thriller en Argentina",
     bajada: "Un recorrido desde el cine policial clásico hasta la reinvención contemporánea del género.",
     autor: "Carolina Ardenghi",
@@ -138,6 +144,7 @@ window.CINELAB_ARTICULOS = [
   },
   {
     id: "ranking-apps-09-16-noviembre",
+    tipo: "ranking",
     titulo: "Ranking de las pelis más vistas en apps del 9 al 16 de noviembre",
     bajada: "Las diez películas más vistas de la semana en Netflix, Prime Video, Disney+ y HBO Max, con una reseña de cada una.",
     autor: "Carolina Ardenghi",
@@ -168,6 +175,7 @@ window.CINELAB_ARTICULOS = [
   },
   {
     id: "ranking-trilogias-marvel",
+    tipo: "ranking",
     titulo: "Ranking: trilogías de Marvel",
     bajada: "Guardianes de la Galaxia, Spider-Man, Deadpool, Thor y Capitán América: cuál es la mejor película de cada trilogía.",
     autor: "Ramiro García",
@@ -214,6 +222,7 @@ window.CINELAB_ARTICULOS = [
   },
   {
     id: "ranking-romanticas-netflix",
+    tipo: "ranking",
     titulo: "Ranking de 5 películas románticas de Netflix",
     bajada: "Del primer amor a los vínculos que nacen en circunstancias inesperadas: cinco historias románticas, con reseña y valoración.",
     autor: "Priscila Alvarado",
@@ -239,6 +248,29 @@ window.CINELAB_ARTICULOS = [
       "## Conclusión",
       "Estas películas muestran distintas maneras de vivir el amor: los primeros enamoramientos, las relaciones que nacen en circunstancias inesperadas y los vínculos atravesados por conflictos personales o familiares. En conjunto, permiten reconocer cómo el cine romántico representa los sentimientos, las decisiones y el crecimiento de sus personajes.",
       "La disponibilidad de cada título puede cambiar según el país y la fecha."
+    ]
+  },
+  {
+    id: "ranking-tim-burton",
+    tipo: "ranking",
+    titulo: "Ranking: películas de Tim Burton",
+    bajada: "Stop-motion, humor oscuro y fantasía: tres películas del universo Burton, de la mejor a la tercera.",
+    autor: "Ramiro García",
+    foto: "img/burton-extrano-mundo-de-jack.jpg",
+    etiquetas: ["Rankings", "Animación y fantasía"],
+    titulos: [],
+    cuerpo: [
+      { afiches: [
+        { foto: "img/burton-extrano-mundo-de-jack.jpg", titulo: "El extraño mundo de Jack" },
+        { foto: "img/burton-cadaver-de-la-novia.jpg", titulo: "El cadáver de la novia" },
+        { foto: "img/burton-charlie-fabrica-de-chocolate.jpg", titulo: "Charlie y la fábrica de chocolate" }
+      ] },
+      "## 1. El extraño mundo de Jack",
+      "Una obra maestra de la animación stop-motion. Su universo, sus canciones y su estética gótica la convierten en una película única. Es una historia sobre alguien que intenta descubrir quién es y qué quiere hacer con su vida. Esa combinación de fantasía, melancolía y creatividad es lo que la convierte en la mejor película de Tim Burton.",
+      "## 2. El cadáver de la novia",
+      "Una combinación espectacular de romance, humor oscuro y fantasía. Visualmente es una de sus películas más hermosas. Es una película que demuestra que detrás de una estética oscura y personajes ficticios puede existir una historia profunda. Su temática de romance, humor y fantasía la convierte en una de las mejores obras de Tim Burton.",
+      "## 3. Charlie y la fábrica de chocolate",
+      "Una peli visualmente increíble, con personajes inolvidables y un Johnny Depp que encaja perfectamente en el universo Burton. Un clásico de los 2000: es prácticamente imposible que alguien no conozca esta película. Una idea espectacular que funcionó muy bien; esta película combina una historia que relata humildad, fantasía y distintos sentimientos."
     ]
   }
 ];

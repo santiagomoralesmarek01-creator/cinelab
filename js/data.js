@@ -32,6 +32,10 @@ window.CINELAB_DATA = {
       titulo: "Marvel: por qué sus series siguen conquistando al público",
       intro: "Desde Daredevil y Jessica Jones hasta WandaVision, Loki, Moon Knight y Ms. Marvel, Marvel encontró en la televisión y el streaming una manera diferente de contar sus historias y de acercarnos mucho más a sus personajes. Lo interesante no son solo los superpoderes, sino los personajes, sus conflictos y las decisiones que tienen que tomar."
     },
+    "Películas de Marvel": {
+      titulo: "Películas de Marvel",
+      intro: "Del origen de Iron Man al legado de Wakanda: reseñas de las películas que construyeron el universo cinematográfico de Marvel, con atención a sus personajes, sus conflictos y lo que dejan más allá de la acción."
+    },
     "Películas románticas": {
       titulo: "Películas románticas",
       intro: "Comedias románticas, dramas y romances pensados para el streaming: reseñas que miran más allá del final feliz, con atención a cómo cada película representa el amor, los vínculos y el crecimiento de sus personajes."
@@ -411,6 +415,97 @@ window.CINELAB_DATA = {
         cuerpo: [
           "Es la más original y compleja de las cuatro, ya que usa la tecnología de los mensajes de voz como eje central de la relación sentimental. Durante gran parte de la película, los protagonistas no se ven cara a cara: el vínculo se construye de forma asimétrica, porque él escucha los audios de ella sin que ella lo sepa. Este recurso permite reflexionar sobre las formas de amar en la actualidad, donde es muy frecuente construir una imagen idealizada de la otra persona a partir de fragmentos: audios, mensajes y publicaciones digitales.",
           "Aquí aparece el punto más polémico de la obra: la figura masculina accede a información muy íntima de la protagonista sin su consentimiento, la investiga y viaja para buscarla. La película intenta presentar esa conducta como romántica, pero una lectura crítica la vincula con una representación problemática de la conquista amorosa. Si bien Zoey Deutch brilla en sus monólogos por teléfono y la dirección logra mantener la tensión emocional, la resolución del conflicto es demasiado rápida: el enfado de la protagonista dura muy poco tiempo antes del final feliz. Por eso es la más rica para debatir: funciona como un espejo de los relatos románticos modernos y sus mensajes muchas veces contradictorios sobre el amor."
+        ]
+      }
+    },
+    {
+      id: "black-panther-wakanda-forever",
+      titulo: "Black Panther: Wakanda Forever",
+      categoria: "Películas de Marvel",
+      tipo: "Película",
+      anio: "2022",
+      anioNum: 2022,
+      reparto: "Letitia Wright, Angela Bassett",
+      foto: "img/black-panther-wakanda-forever.jpg",
+      rating: null,
+      sinopsis: "Wakanda atraviesa el duelo por la muerte de su rey T'Challa. Shuri debe encontrar su propio camino mientras el reino enfrenta nuevas amenazas internacionales y la aparición de Namor, líder de Talokan.",
+      resena: {
+        titulo: "El poder de un legado que nunca desaparece",
+        cuerpo: [
+          "Marvel volvió a Wakanda con una historia que va mucho más allá de los superhéroes, las batallas y los efectos especiales. Black Panther: Wakanda Forever es una de las películas más emotivas del universo cinematográfico de Marvel, no solamente por lo que cuenta, sino también por lo que representa. Después de la muerte de Chadwick Boseman, quien interpretó a T'Challa, la producción tuvo el enorme desafío de continuar una historia que había conquistado a millones de espectadores en todo el mundo.",
+          "La película comienza mostrando a Wakanda atravesando un momento de profundo dolor por la pérdida de su rey. En medio de ese escenario, Shuri, interpretada por Letitia Wright, debe encontrar su propio camino y aprender a ocupar un lugar que nunca imaginó. Mientras tanto, el reino enfrenta nuevas amenazas internacionales que ponen en peligro su independencia y sus recursos. La aparición de Namor, líder de Talokan, introduce un nuevo conflicto y presenta a un personaje que no responde simplemente al estereotipo del villano, sino que tiene sus propias razones para defender a su pueblo.",
+          "Uno de los grandes aciertos de esta producción es la manera en que combina el espectáculo de Marvel con temas mucho más profundos, como el duelo, la identidad, la familia, el poder y la responsabilidad. Wakanda no es solamente un escenario ficticio: representa una cultura, una historia y una identidad que se construyeron a lo largo de generaciones. Su estética, su música, sus tradiciones y su tecnología hacen que el espectador sienta que está entrando en un mundo con personalidad propia.",
+          "También merece destacarse la presencia de Angela Bassett como la reina Ramonda, quien ofrece una interpretación cargada de fuerza y sensibilidad. Su personaje representa el dolor de una madre, pero también la responsabilidad de proteger a todo un pueblo.",
+          "Desde mi punto de vista, Wakanda Forever es una película que demuestra que Marvel puede emocionar tanto como entretener. No intenta reemplazar a T'Challa, sino reconocer su importancia y construir una nueva etapa a partir de su legado. Quizás no tenga el mismo impacto narrativo que su primera entrega, pero consigue algo muy importante: recordar que los verdaderos héroes no solamente se definen por sus poderes, sino también por lo que dejan en los demás.",
+          "En definitiva, es una película que merece ser vista no solo por los fanáticos de Black Panther, sino por cualquier espectador que disfrute de historias sobre la identidad, la pérdida y la capacidad de seguir adelante."
+        ]
+      }
+    },
+    {
+      id: "thor",
+      titulo: "Thor",
+      categoria: "Películas de Marvel",
+      tipo: "Película",
+      anio: "2011",
+      anioNum: 2011,
+      reparto: "Chris Hemsworth, Tom Hiddleston",
+      foto: "img/marvel-thor-1.jpg",
+      rating: null,
+      sinopsis: "Thor, príncipe de Asgard y heredero al trono, es desterrado a la Tierra por su padre Odín y pierde sus poderes. Allí conoce a la científica Jane Foster, mientras su hermano Loki trama quedarse con el trono.",
+      resena: {
+        titulo: "Cuando ser un héroe significa aprender a ser humano",
+        cuerpo: [
+          "Antes de convertirse en uno de los Vengadores más reconocidos, Thor tuvo que aprender una lección que ningún entrenamiento ni poder podía enseñarle: la verdadera fuerza no está en un martillo, sino en las decisiones que tomamos. Estrenada en 2011, Thor fue una de las películas fundamentales para ampliar el universo cinematográfico de Marvel, incorporando la mitología nórdica, los mundos fantásticos y una historia familiar atravesada por la ambición, los celos y la búsqueda de identidad.",
+          "La película presenta a Thor, interpretado por Chris Hemsworth, como el príncipe de Asgard, un guerrero poderoso y heredero al trono. Sin embargo, su personalidad arrogante y su impulsividad lo llevan a cometer un error que provoca que su padre, Odín, lo destierre a la Tierra y le quite sus poderes. Allí conoce a Jane Foster, una científica que termina convirtiéndose en una figura importante en su transformación personal.",
+          "Mientras Thor intenta adaptarse a una vida completamente diferente, su hermano Loki comienza a desarrollar sus propios planes para quedarse con el trono de Asgard. Esta relación es uno de los puntos más interesantes de la película. Loki, interpretado por Tom Hiddleston, no es simplemente un antagonista: es un personaje atravesado por los celos, la necesidad de reconocimiento y los conflictos con su propia identidad. Su vínculo con Thor aporta una dimensión emocional que va mucho más allá de las escenas de acción.",
+          "Uno de los aspectos más atractivos de esta producción es la combinación de dos escenarios completamente diferentes: la majestuosidad de Asgard y la cotidianidad de la Tierra. Marvel logra construir un universo visualmente impactante sin perder de vista el desarrollo de sus protagonistas. Además, el humor aparece en momentos oportunos y ayuda a que el espectador conecte con Thor desde una perspectiva más humana.",
+          "En mi opinión, lo mejor de esta película es su mensaje. Thor comienza siendo un personaje convencido de que merece el poder por su nacimiento y sus habilidades, pero termina comprendiendo que ser digno implica responsabilidad, humildad y sacrificio. Esa evolución es lo que realmente convierte su historia en algo interesante.",
+          "Aunque con el paso del tiempo Marvel exploró versiones mucho más humorísticas y descontracturadas del personaje, esta primera película tiene una importancia especial porque establece sus orígenes y presenta una de las relaciones fraternales más complejas de la franquicia.",
+          "Thor es una aventura de fantasía y acción que demuestra que incluso los personajes más poderosos necesitan aprender, equivocarse y cambiar para convertirse en verdaderos héroes."
+        ]
+      }
+    },
+    {
+      id: "iron-man",
+      titulo: "Iron Man",
+      categoria: "Películas de Marvel",
+      tipo: "Película",
+      anio: "2008",
+      anioNum: 2008,
+      reparto: "Robert Downey Jr.",
+      foto: "img/iron-man.jpg",
+      rating: null,
+      sinopsis: "Tony Stark, magnate y genio creador de armamento, es secuestrado durante una exhibición tecnológica en Afganistán. En cautiverio construye un traje blindado para escapar y decide cambiar el rumbo de su vida y de su empresa.",
+      resena: {
+        titulo: "El origen del héroe que transformó el cine moderno",
+        cuerpo: [
+          "Hacia el año 2008, la industria cinematográfica presenció la llegada de una figura que alteraría para siempre el panorama del entretenimiento contemporáneo. La entrega inaugural de Iron Man, estelarizada magistralmente por Robert Downey Jr., no únicamente trajo a la pantalla a Tony Stark, sino que también cimentó las bases del afamado Universo Cinematográfico de Marvel, transformándose en una piedra angular de la cultura popular.",
+          "La narrativa nos introduce a Tony Stark, un magnate industrial, genio de la ingeniería y creador de armamento que parece disfrutar de un estilo de vida inigualable, caracterizado por la opulencia y el prestigio. No obstante, tras sufrir una emboscada durante una exhibición tecnológica en territorio afgano, resulta secuestrado por una facción insurgente. Durante su confinamiento, toma conciencia del verdadero impacto de sus creaciones y deduce que su intelecto debe orientarse hacia un propósito superior al lucro financiero.",
+          "Valiéndose de los recursos disponibles en su cautiverio, concibe un traje blindado que le posibilita huir y retornar a su hogar. Sin embargo, dicha peripecia marca un punto de inflexión definitivo en su trayectoria. El magnate opta por reestructurar el rumbo de su corporación y diseñar una innovación destinada a la protección ciudadana en lugar del peligro, dando inicio formal al surgimiento de Iron Man.",
+          "Uno de los mayores aciertos de esta producción radica en la brillante interpretación de Robert Downey Jr., cuyo carisma, sarcasmo y soltura convierten al personaje en una figura icónica. No se trata de un arquetipo heroico impecable; al contrario, es soberbio, impulsivo y posee defectos evidentes. Precisamente esa imperfección resulta cautivadora, pues el público presencia tanto la construcción de la armadura como su profunda metamorfosis interior.",
+          "Asimismo, la cinta destaca por su destreza al entrelazar momentos de acción deslumbrante, ciencia avanzada, dinamismo humorístico y un arco de superación personal muy bien estructurado. Las secuencias dedicadas a la elaboración de los primeros prototipos revelan la esencia inventiva del protagonista, permitiendo entender la devoción que siente por cada avance técnico.",
+          "Desde mi punto de vista, Iron Man se mantiene como un pilar fundamental en la franquicia debido a que logró algo nada sencillo: tomar a un personaje secundario para la audiencia general y consagrarlo como una figura central. Además, su célebre desenlace, donde Stark revela públicamente su identidad secreta, preparó el camino hacia un proyecto narrativo sin precedentes.",
+          "Años después de su debut, el largometraje conserva intacta su relevancia. No solo por haber sido la chispa de un imperio multimillonario, sino por instaurar una fórmula narrativa donde las figuras principales pueden evolucionar, aprender de sus fallos y madurar a través de múltiples entregas.",
+          "En definitiva, Iron Man trasciende la simple etiqueta de aventura y acción: fue la primera pieza de un fenómeno cinematográfico que conquistó las salas del mundo entero."
+        ]
+      }
+    },
+    {
+      id: "split",
+      titulo: "Split",
+      categoria: "Thrillers / Policiales",
+      tipo: "Película",
+      anio: "2016",
+      anioNum: 2016,
+      reparto: "James McAvoy · dir. M. Night Shyamalan",
+      foto: "img/split.jpg",
+      rating: null,
+      sinopsis: "Kevin Crumb, un hombre con 23 personalidades diferentes, secuestra a tres adolescentes, que intentan encontrar una manera de escapar mientras descubren las distintas identidades que conviven dentro de él.",
+      resena: {
+        autor: "Ramiro García",
+        cuerpo: [
+          "Es un thriller psicológico que logra mantener al espectador en tensión desde el comienzo hasta el final. La película cuenta la historia de Kevin Crumb, un hombre que tiene 23 personalidades diferentes y que secuestra a tres chicas adolescentes. A medida que avanza la historia, las chicas intentan encontrar una manera de escapar mientras descubren las distintas identidades que conviven dentro de Kevin.",
+          "Uno de los aspectos más destacados de la película es la actuación de James McAvoy, quien consigue interpretar personalidades completamente diferentes, cambiando su voz, sus gestos y su comportamiento de una manera impresionante. La película juega con la expectativa del espectador y va revelando información de a poco, logrando que cada escena tenga algo que aportar. Se la recomienda para quienes disfrutan de los thrillers psicológicos, las historias misteriosas y los finales inesperados."
         ]
       }
     }

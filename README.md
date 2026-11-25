@@ -10,7 +10,10 @@ Está hecho con **HTML, CSS y JavaScript puro**: no requiere instalar nada ni co
 - **Inicio**: recomendados, Top 3 de terror 2025, últimas reseñas y botón **🎲 ¿Qué veo hoy?** (elige un título al azar).
 - **Catálogo**: buscador y filtros por categoría, tipo (película/serie), año y valoración, más orden por puntaje, año, cantidad de reseñas o A–Z. Cada categoría muestra su texto introductorio.
 - **Ficha de cada título**: sinopsis, reparto, puntaje del equipo y de la comunidad, la reseña del equipo, un link al tráiler y las reseñas de los usuarios.
-- **Artículos**: notas de opinión sobre cine, series y géneros (Marvel, Cris Morena, thrillers, Top 3 de terror), con enlaces a las fichas que citan. Cada ficha muestra los artículos que la mencionan.
+- **Críticas y Rankings**: los textos del equipo se dividen en dos pestañas. *Críticas* reúne notas, análisis e
+  informes; *Rankings* reúne los rankings, que además se destacan en el inicio con sus primeros puestos.
+  Cada artículo de `js/articles.js` lleva `tipo: "ranking"` o `tipo: "critica"`.
+- **Comunidad**: el ranking de usuarios por XP (antes "Ranking").
 - **Reseñas**: todas las reseñas de la comunidad, filtrables por categoría y ordenables por más recientes o más valoradas.
 - **Login opcional**: el sitio se puede ver completo sin cuenta. La cuenta sirve para:
   - publicar, editar y borrar reseñas (1 a 5 estrellas, una por título),

@@ -26,7 +26,7 @@
     content: {},          // fotos y firmas cargadas por el admin
     catalogo: { q: "", cat: "Todas", tipo: "Todos", anio: "Todos", min: "0", orden: "rating" },
     resenas: { cat: "Todas", orden: "recientes" },
-    articulos: { tag: "Todos" },
+    articulos: { critica: "Todos", ranking: "Todos" },
     authTab: "login",
     animateNext: true,    // animar la próxima vista (al navegar, no al recargar datos)
     popLike: null,
@@ -319,11 +319,17 @@
 
   function render() {
     const { page, arg } = currentRoute();
-    setActiveNav(page === "articulo" ? "articulos" : page === "titulo" ? "catalogo" : page);
+    const navFor = {
+      articulo: (articulosById[arg] || {}).tipo === "ranking" ? "rankings" : "criticas",
+      titulo: "catalogo", articulos: "criticas", ranking: "rankings", usuario: "comunidad"
+    };
+    setActiveNav(navFor[page] || page);
     document.title = "CineLab — Reseñas de cine y series";
     const views = {
       inicio: viewHome, catalogo: viewCatalog, titulo: viewTitle, resenas: viewReviews,
-      articulos: viewArticles, articulo: viewArticle, ranking: viewRanking, admin: viewAdmin,
+      criticas: () => viewArticles("critica"), rankings: () => viewArticles("ranking"),
+      articulos: () => viewArticles("critica"), ranking: () => viewArticles("ranking"),
+      articulo: viewArticle, comunidad: viewRanking, admin: viewAdmin,
       perfil: viewProfile, usuario: viewProfile, medallas: viewMedalsInfo, contacto: viewContact
     };
     if (observer) observer.disconnect();
@@ -451,6 +457,39 @@
       </a>`;
   }
 
+  // Puestos de un ranking: los subtítulos de su cuerpo, sin número, medalla ni plataforma.
+  function rankingEntries(a) {
+    return a.cuerpo
+      .filter(b => typeof b === "string" && b.startsWith("## "))
+      .map(b => b.slice(3).replace(/^[^0-9A-Za-zÁÉÍÓÚÑáéíóúñ¿¡]+/, "").replace(/^\d+\.\s*/, "").split(" — ")[0].trim())
+      .filter(t => t && !/^conclusi/i.test(t));
+  }
+
+  // Portada de un ranking: la suya, o el primer afiche del cuerpo, o la foto del primer título citado.
+  function rankingCover(a) {
+    const strip = a.cuerpo.find(b => b && b.afiches);
+    const firstItem = (a.titulos || []).map(t => itemsById[t]).find(Boolean);
+    return articlePhoto(a) || (strip && staticImg(strip.afiches[0].foto)) || (firstItem && itemPhoto(firstItem)) || null;
+  }
+
+  function rankingCard(a) {
+    const entries = rankingEntries(a);
+    const cover = rankingCover(a);
+    return `
+      <a class="ranking-card" href="#/articulo/${esc(a.id)}">
+        <div class="rc-media">${cover ? `<img src="${esc(cover)}" alt="" loading="lazy">` : `<span class="rc-trophy" aria-hidden="true">🏆</span>`}</div>
+        <div class="rc-body">
+          <p class="cat">Ranking · ${entries.length} ${entries.length === 1 ? "puesto" : "puestos"}</p>
+          <h3>${esc(a.titulo)}</h3>
+          <ol class="rc-list">${entries.slice(0, 3).map(e => `<li>${esc(e)}</li>`).join("")}</ol>
+          ${entries.length > 3 ? `<p class="rc-more">y ${entries.length - 3} más →</p>` : ""}
+          <p class="card-foot">✍️ ${esc(articleAuthor(a))}</p>
+        </div>
+      </a>`;
+  }
+
+  const byTipo = tipo => articulos.filter(a => (a.tipo || "critica") === tipo).slice().reverse();
+
   function emptyReviews(text) {
     return `<div class="empty"><p>${text}</p>${state.user ? `<a class="btn" href="#/catalogo">Elegí un título para reseñar</a>`
       : `<button class="btn" data-action="open-auth" data-tab="signup">Creá tu cuenta y empezá a sumar medallas</button>`}</div>`;
@@ -489,22 +528,15 @@
         </div>
       </div>
 
+      ${byTipo("ranking").length ? `
+      <section class="section rankings-home">
+        <div class="section-head"><h2>🏆 Rankings del equipo</h2><a href="#/rankings">Ver todos →</a></div>
+        <div class="ranking-grid">${byTipo("ranking").map(rankingCard).join("")}</div>
+      </section>` : ""}
+
       <section class="section">
         <div class="section-head"><h2>Recomendados</h2><a href="#/catalogo">Ver todo →</a></div>
         <div class="grid">${destacados.map(card).join("")}</div>
-      </section>
-
-      <section class="section">
-        <div class="section-head"><h2>Top 3 · Terror 2025</h2><a href="#/articulo/top-terror-2025">Leer el ranking →</a></div>
-        <ol class="podium">
-          ${top.map(i => `
-            <li><a href="#/titulo/${esc(i.id)}">
-              <span class="podium-pos">${["🥇", "🥈", "🥉"][i.top - 1]}</span>
-              ${poster(i, "poster-thumb")}
-              <span class="podium-info"><strong>${esc(i.titulo)}</strong><small>${esc(i.reparto)}</small></span>
-              ${i.rating != null ? `<span class="rating">★ ${esc(i.rating)}</span>` : ""}
-            </a></li>`).join("")}
-        </ol>
       </section>
 
       ${firmadas.length ? `
@@ -515,10 +547,10 @@
 
       ${feat ? featuredHtml(feat) : ""}
 
-      ${articulos.length ? `
+      ${byTipo("critica").length ? `
       <section class="section">
-        <div class="section-head"><h2>Artículos</h2><a href="#/articulos">Ver todos →</a></div>
-        <div class="grid">${articulos.slice(0, 3).map(articleCard).join("")}</div>
+        <div class="section-head"><h2>Críticas</h2><a href="#/criticas">Ver todas →</a></div>
+        <div class="grid">${byTipo("critica").slice(0, 3).map(articleCard).join("")}</div>
       </section>` : ""}
 
       <section class="section join">
@@ -787,15 +819,24 @@
     if (f.orden === "fotos") list = list.filter(r => safeImg(r.photoUrl));
     const feat = featuredReview();
     const cats = ["Todas"].concat(catNames);
+    const equipoList = items.filter(i => itemReview(i) && (f.cat === "Todas" || i.categoria === f.cat)).reverse();
     app.innerHTML = `
       <section class="page-head">
-        <h1>Reseñas y recomendaciones</h1>
-        <p>Lo que opina la comunidad de CineLab. Dale like a las reseñas que te ayudaron a elegir.</p>
+        <h1>Reseñas</h1>
+        <p>Las reseñas del equipo de CineLab y las de la comunidad. Dale like a las que te ayudaron a elegir.</p>
       </section>
       ${feat ? featuredHtml(feat) : ""}
       <div class="controls chips">
         ${cats.map(c => `<button class="chip${c === f.cat ? " active" : ""}" data-action="reviews-cat" data-cat="${esc(c)}">${esc(c)}</button>`).join("")}
       </div>
+      ${equipoList.length ? `
+      <section class="section team-reviews">
+        <h2>Reseñas del equipo</h2>
+        <div class="grid">${equipoList.map(card).join("")}</div>
+      </section>` : ""}
+      <section class="section">
+        <h2>Reseñas de la comunidad</h2>
+      </section>
       <div class="controls">
         <div class="segmented">
           <button class="${f.orden === "recientes" ? "active" : ""}" data-action="reviews-order" data-order="recientes">Más recientes</button>
@@ -808,32 +849,43 @@
   }
 
   // ---------------------------------------------------------------- artículos
-  function viewArticles() {
-    const f = state.articulos;
-    const tags = ["Todos"].concat(Array.from(new Set(articulos.flatMap(a => a.etiquetas))));
-    if (!tags.includes(f.tag)) f.tag = "Todos";
-    const list = articulos.filter(a => f.tag === "Todos" || a.etiquetas.includes(f.tag));
+  const TABS = {
+    critica: { titulo: "Críticas", ruta: "#/criticas", texto: "Notas, análisis e informes sobre cine, series y sus géneros: lo que nos dejan las historias más allá de la reseña." },
+    ranking: { titulo: "Rankings", ruta: "#/rankings", texto: "Los rankings del equipo: las mejores de cada saga, género o semana, ordenadas y comentadas." }
+  };
+
+  function viewArticles(tipo) {
+    const tab = TABS[tipo];
+    const all = byTipo(tipo);
+    const tags = ["Todos"].concat(Array.from(new Set(all.flatMap(a => a.etiquetas))).filter(t => t !== "Rankings"));
+    if (!tags.includes(state.articulos[tipo])) state.articulos[tipo] = "Todos";
+    const sel = state.articulos[tipo];
+    const list = all.filter(a => sel === "Todos" || a.etiquetas.includes(sel));
     app.innerHTML = `
       <section class="page-head">
-        <h1>Artículos</h1>
-        <p>Notas y opiniones sobre cine, series y sus géneros: rankings, análisis de actuaciones y lo que nos dejan las historias.</p>
+        <h1>${tab.titulo}</h1>
+        <p>${tab.texto}</p>
       </section>
-      <div class="controls chips">
-        ${tags.map(t => `<button class="chip${t === f.tag ? " active" : ""}" data-action="articles-tag" data-tag="${esc(t)}">${esc(t)}</button>`).join("")}
-      </div>
-      ${list.length ? `<div class="grid">${list.map(articleCard).join("")}</div>` : `<p class="muted">Todavía no hay artículos.</p>`}`;
+      ${tags.length > 2 ? `<div class="controls chips">
+        ${tags.map(t => `<button class="chip${t === sel ? " active" : ""}" data-action="articles-tag" data-kind="${tipo}" data-tag="${esc(t)}">${esc(t)}</button>`).join("")}
+      </div>` : ""}
+      ${list.length ? (tipo === "ranking"
+          ? `<div class="ranking-grid">${list.map(rankingCard).join("")}</div>`
+          : `<div class="grid">${list.map(articleCard).join("")}</div>`)
+        : `<p class="muted">Todavía no hay nada acá.</p>`}`;
   }
 
   function viewArticle(id) {
     const a = articulosById[id];
     if (!a) return viewNotFound();
     const cited = (a.titulos || []).map(t => itemsById[t]).filter(Boolean);
-    const others = articulos.filter(x => x !== a).slice(0, 3);
+    const tab = TABS[a.tipo === "ranking" ? "ranking" : "critica"];
+    const others = byTipo(a.tipo === "ranking" ? "ranking" : "critica").filter(x => x !== a).slice(0, 3);
     const photo = articlePhoto(a);
     const author = articleAuthor(a);
     document.title = a.titulo + " — CineLab";
     app.innerHTML = `
-      <nav class="crumbs"><a href="#/articulos">Artículos</a> / <span>${a.etiquetas.map(esc).join(" · ")}</span></nav>
+      <nav class="crumbs"><a href="${tab.ruta}">${tab.titulo}</a> / <span>${a.etiquetas.map(esc).join(" · ")}</span></nav>
       <article class="article">
         <header>
           <p class="cat">${a.etiquetas.map(esc).join(" · ")}</p>
@@ -860,8 +912,8 @@
         </section>` : ""}
       ${others.length ? `
         <section class="section">
-          <h2>Más artículos</h2>
-          <div class="grid">${others.map(articleCard).join("")}</div>
+          <h2>Más ${tab.titulo.toLowerCase()}</h2>
+          <div class="${a.tipo === "ranking" ? "ranking-grid" : "grid"}">${others.map(a.tipo === "ranking" ? rankingCard : articleCard).join("")}</div>
         </section>` : ""}`;
   }
 
@@ -956,7 +1008,7 @@
     }).sort((a, b) => b.p.xp - a.p.xp);
     app.innerHTML = `
       <section class="page-head">
-        <h1>Ranking de críticos</h1>
+        <h1>Comunidad: ranking de críticos</h1>
         <p>Cada reseña suma 10 XP, cada like recibido 5 XP y cada medalla 20 XP.</p>
       </section>
       ${rows.length ? `
@@ -1271,7 +1323,7 @@
     zoom: el => { if (safeImg(el.dataset.src)) openModal(`<img class="lightbox-img" src="${esc(el.dataset.src)}" alt="Foto ampliada">`, "modal-wide"); },
     "reviews-cat": el => { state.resenas.cat = el.dataset.cat; render(); },
     "reviews-order": el => { state.resenas.orden = el.dataset.order; render(); },
-    "articles-tag": el => { state.articulos.tag = el.dataset.tag; render(); },
+    "articles-tag": el => { state.articulos[el.dataset.kind] = el.dataset.tag; render(); },
     "cancel-edit": () => { state.editing = null; render(); },
     "edit-team-rating": el => {
       const box = $("#teamScore");
