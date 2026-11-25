@@ -36,6 +36,14 @@ window.CINELAB_DATA = {
       titulo: "Películas de Marvel",
       intro: "Del origen de Iron Man al legado de Wakanda: reseñas de las películas que construyeron el universo cinematográfico de Marvel, con atención a sus personajes, sus conflictos y lo que dejan más allá de la acción."
     },
+    "Fantasía y animación": {
+      titulo: "Fantasía y animación",
+      intro: "Mundos imposibles, stop-motion, cuentos y aventuras para toda la familia: películas que se animan a imaginar."
+    },
+    "Acción y drama": {
+      titulo: "Acción y drama",
+      intro: "Persecuciones, conspiraciones, juicios y forajidos: historias de alto voltaje y dilemas morales, muchas de ellas entre lo más visto en las plataformas."
+    },
     "Películas románticas": {
       titulo: "Películas románticas",
       intro: "Comedias románticas, dramas y romances pensados para el streaming: reseñas que miran más allá del final feliz, con atención a cómo cada película representa el amor, los vínculos y el crecimiento de sus personajes."
@@ -508,6 +516,161 @@ window.CINELAB_DATA = {
           "Uno de los aspectos más destacados de la película es la actuación de James McAvoy, quien consigue interpretar personalidades completamente diferentes, cambiando su voz, sus gestos y su comportamiento de una manera impresionante. La película juega con la expectativa del espectador y va revelando información de a poco, logrando que cada escena tenga algo que aportar. Se la recomienda para quienes disfrutan de los thrillers psicológicos, las historias misteriosas y los finales inesperados."
         ]
       }
+    },
+    {
+      id: "no-nos-rendimos", titulo: "No nos rendimos", categoria: "Acción y drama", tipo: "Película", anio: null, anioNum: null,
+      reparto: "", detalles: "Título original: Never Surrender · Netflix", rating: null,
+      sinopsis: "Un excombatiente de las fuerzas especiales que intenta dejar atrás su pasado violento se ve obligado a regresar al circuito clandestino de peleas ilegales para saldar una deuda que amenaza la vida de su hermano menor."
+    },
+    {
+      id: "the-mongoose", titulo: "The Mongoose", categoria: "Acción y drama", tipo: "Película", anio: null, anioNum: null,
+      reparto: "Liam Neeson", detalles: "Prime Video", rating: null,
+      sinopsis: "Un condecorado veterano de guerra es incriminado en un crimen de Estado y debe emprender una huida contrarreloj mientras las agencias de inteligencia despliegan una cacería nacional para capturarlo."
+    },
+    {
+      id: "backrooms", titulo: "Backrooms", categoria: "Terror y Suspenso", tipo: "Película", anio: null, anioNum: null,
+      reparto: "", detalles: "Disney+", rating: null,
+      sinopsis: "Basada en el fenómeno viral de internet: un grupo de investigadores queda atrapado en una dimensión paralela infinita de pasillos amarillos, oficinas vacías y luces fluorescentes, donde descubren que no están solos."
+    },
+    {
+      id: "matilda", titulo: "Matilda", categoria: "Fantasía y animación", tipo: "Película", anio: "1996", anioNum: 1996,
+      reparto: "Mara Wilson · dir. Danny DeVito", detalles: "HBO Max", rating: null,
+      sinopsis: "Una niña extraordinariamente inteligente y amante de los libros, que crece en una familia que desprecia su talento, enfrenta a la temible directora Tronchatoro y descubre que tiene poderes telequinéticos."
+    },
+    {
+      id: "the-one", titulo: "The One", categoria: "Películas románticas", tipo: "Película", anio: null, anioNum: null,
+      reparto: "", detalles: "Netflix", rating: null,
+      sinopsis: "En un futuro cercano, una prueba de ADN identifica a la pareja genéticamente perfecta de cada persona, y las vidas sentimentales de distintos personajes cambian de rumbo tras someterse al test."
+    },
+    {
+      id: "drive-the-pretenders", titulo: "Drive - The Pretenders", categoria: "Acción y drama", tipo: "Película", anio: null, anioNum: null,
+      reparto: "", detalles: "Prime Video", rating: null,
+      sinopsis: "Un conductor solitario especializado en fugas nocturnas acepta un último encargo que termina en una emboscada, y debe atravesar la ciudad durante una madrugada interminable esquivando a la policía y a sicarios."
+    },
+    {
+      id: "spider-man-no-way-home", titulo: "Spider-Man: Sin camino a casa", categoria: "Películas de Marvel", tipo: "Película", anio: "2021", anioNum: 2021,
+      reparto: "Tom Holland, Zendaya · dir. Jon Watts", detalles: "Título original: Spider-Man: No Way Home · Disney+", foto: "img/marvel-spiderman-3.jpg", rating: null,
+      sinopsis: "Con su identidad secreta expuesta, Peter Parker le pide al Doctor Strange un hechizo para que el mundo la olvide. El hechizo falla, fractura el multiverso y trae de regreso a villanos y aliados de otras realidades."
+    },
+    {
+      id: "un-bon-avocat", titulo: "Un buen abogado", categoria: "Acción y drama", tipo: "Película", anio: null, anioNum: null,
+      reparto: "", detalles: "Título original: Un bon avocat · Netflix", rating: null,
+      sinopsis: "Un prestigioso abogado penalista de París ve su carrera, su matrimonio y sus convicciones puestas a prueba al aceptar la defensa de un caso mediático lleno de contradicciones y presiones políticas."
+    },
+    {
+      id: "the-pout-pout-fish", titulo: "The Pout-Pout Fish", categoria: "Fantasía y animación", tipo: "Película", anio: null, anioNum: null,
+      reparto: "", detalles: "HBO Max", rating: null,
+      sinopsis: "Adaptación del libro infantil sobre el señor Pez, una criatura marina melancólica que emprende una aventura submarina con sus amigos cuando una crisis amenaza su arrecife."
+    },
+    {
+      id: "rust", titulo: "Rust", categoria: "Acción y drama", tipo: "Película", anio: null, anioNum: null,
+      reparto: "Alec Baldwin", detalles: "Prime Video", rating: null,
+      sinopsis: "En Kansas, a finales del siglo XIX, un veterano forajido rescata a su nieto de trece años, condenado a la horca, y ambos huyen hacia la frontera mexicana perseguidos por un alguacil federal y un cazarrecompensas."
+    },
+    {
+      id: "a-todos-los-chicos", titulo: "A todos los chicos de los que me enamoré", categoria: "Películas románticas", tipo: "Película", anio: "2018", anioNum: 2018,
+      reparto: "Lana Condor, Noah Centineo", detalles: "Netflix", rating: null,
+      sinopsis: "Lara Jean escribe cartas secretas a los chicos de los que estuvo enamorada, pero su vida cambia cuando esas cartas llegan inesperadamente a sus destinatarios."
+    },
+    {
+      id: "corazones-malheridos", titulo: "Corazones malheridos", categoria: "Películas románticas", tipo: "Película", anio: "2022", anioNum: 2022,
+      reparto: "Sofia Carson, Nicholas Galitzine", detalles: "Netflix", rating: null,
+      sinopsis: "Cassie, una cantante, y Luke, un militar, aceptan un matrimonio por conveniencia para resolver problemas económicos y, con el tiempo, empiezan a desarrollar sentimientos verdaderos."
+    },
+    {
+      id: "la-ultima-cancion", titulo: "La última canción", categoria: "Películas románticas", tipo: "Película", anio: "2010", anioNum: 2010,
+      reparto: "Miley Cyrus, Liam Hemsworth", detalles: "Netflix", rating: null,
+      sinopsis: "Ronnie pasa el verano con su padre, con quien tiene una relación distante. Allí conoce a Will y se enamora, mientras empieza a reconstruir el vínculo familiar."
+    },
+    {
+      id: "fabricante-de-lagrimas", titulo: "Fabricante de lágrimas", categoria: "Películas románticas", tipo: "Película", anio: "2024", anioNum: 2024,
+      reparto: "", detalles: "Netflix", rating: null,
+      sinopsis: "Nica y Rigel crecieron en un orfanato y, tras ser adoptados por la misma familia, deben adaptarse a una nueva vida juntos entre conflictos, secretos y emociones intensas."
+    },
+    {
+      id: "a-traves-de-mi-ventana", titulo: "A través de mi ventana", categoria: "Películas románticas", tipo: "Película", anio: "2022", anioNum: 2022,
+      reparto: "Clara Galle, Julio Peña", detalles: "Netflix", rating: null,
+      sinopsis: "Raquel está enamorada de su vecino Ares desde hace mucho tiempo. Cuando por fin se acercan, las diferencias personales y familiares ponen a prueba la relación."
+    },
+    {
+      id: "el-extrano-mundo-de-jack", titulo: "El extraño mundo de Jack", categoria: "Fantasía y animación", tipo: "Película", anio: "1993", anioNum: 1993,
+      reparto: "dir. Henry Selick · producida por Tim Burton", foto: "img/burton-extrano-mundo-de-jack.jpg", rating: null,
+      sinopsis: "Jack Skellington, el rey de la Ciudad de Halloween, cansado de la misma rutina, descubre la Ciudad de la Navidad y decide adueñarse de esa fiesta. Un clásico de la animación stop-motion."
+    },
+    {
+      id: "el-cadaver-de-la-novia", titulo: "El cadáver de la novia", categoria: "Fantasía y animación", tipo: "Película", anio: "2005", anioNum: 2005,
+      reparto: "Johnny Depp, Helena Bonham Carter · dir. Tim Burton", foto: "img/burton-cadaver-de-la-novia.jpg", rating: null,
+      sinopsis: "La víspera de su boda, un joven tímido ensaya sus votos en un bosque y, sin querer, termina casado con una novia muerta que lo lleva al mundo de los muertos."
+    },
+    {
+      id: "charlie-y-la-fabrica-de-chocolate", titulo: "Charlie y la fábrica de chocolate", categoria: "Fantasía y animación", tipo: "Película", anio: "2005", anioNum: 2005,
+      reparto: "Johnny Depp · dir. Tim Burton", foto: "img/burton-charlie-fabrica-de-chocolate.jpg", rating: null,
+      sinopsis: "Charlie, un chico humilde, gana uno de los cinco boletos dorados para recorrer la misteriosa fábrica de chocolate del excéntrico Willy Wonka."
+    },
+    {
+      id: "guardianes-de-la-galaxia", titulo: "Guardianes de la Galaxia", categoria: "Películas de Marvel", tipo: "Película", anio: "2014", anioNum: 2014,
+      reparto: "Chris Pratt, Zoe Saldaña, Dave Bautista · dir. James Gunn", foto: "img/marvel-guardianes-1.jpg", rating: null,
+      sinopsis: "Peter Quill, un aventurero espacial, forma un equipo improbable con un grupo de inadaptados para proteger un poderoso orbe que amenaza a toda la galaxia."
+    },
+    {
+      id: "guardianes-de-la-galaxia-vol-2", titulo: "Guardianes de la Galaxia Vol. 2", categoria: "Películas de Marvel", tipo: "Película", anio: "2017", anioNum: 2017,
+      reparto: "Chris Pratt, Zoe Saldaña, Dave Bautista · dir. James Gunn", foto: "img/marvel-guardianes-2.jpg", rating: null,
+      sinopsis: "Los Guardianes siguen recorriendo el espacio mientras Peter Quill descubre la verdad sobre su padre."
+    },
+    {
+      id: "guardianes-de-la-galaxia-vol-3", titulo: "Guardianes de la Galaxia Vol. 3", categoria: "Películas de Marvel", tipo: "Película", anio: "2023", anioNum: 2023,
+      reparto: "Chris Pratt, Zoe Saldaña, Dave Bautista · dir. James Gunn", foto: "img/marvel-guardianes-3.jpg", rating: null,
+      sinopsis: "Los Guardianes emprenden una misión para salvar a Rocket, mientras se revela el doloroso origen de su compañero."
+    },
+    {
+      id: "spider-man-de-regreso-a-casa", titulo: "Spider-Man: De regreso a casa", categoria: "Películas de Marvel", tipo: "Película", anio: "2017", anioNum: 2017,
+      reparto: "Tom Holland, Zendaya · dir. Jon Watts", foto: "img/marvel-spiderman-1.jpg", rating: null,
+      sinopsis: "Peter Parker intenta equilibrar su vida de estudiante secundario con su rol de Spider-Man mientras busca demostrarle a Tony Stark que está listo para ser un Vengador."
+    },
+    {
+      id: "spider-man-lejos-de-casa", titulo: "Spider-Man: Lejos de casa", categoria: "Películas de Marvel", tipo: "Película", anio: "2019", anioNum: 2019,
+      reparto: "Tom Holland, Zendaya · dir. Jon Watts", foto: "img/marvel-spiderman-2.jpg", rating: null,
+      sinopsis: "Durante un viaje escolar por Europa, Peter Parker se ve obligado a volver a la acción para enfrentar nuevas amenazas."
+    },
+    {
+      id: "deadpool", titulo: "Deadpool", categoria: "Películas de Marvel", tipo: "Película", anio: "2016", anioNum: 2016,
+      reparto: "Ryan Reynolds", foto: "img/marvel-deadpool-1.jpg", rating: null,
+      sinopsis: "Wade Wilson, un exmercenario, queda desfigurado pero con un poder de curación acelerada tras un experimento, y sale a buscar venganza con mucho humor."
+    },
+    {
+      id: "deadpool-2", titulo: "Deadpool 2", categoria: "Películas de Marvel", tipo: "Película", anio: "2018", anioNum: 2018,
+      reparto: "Ryan Reynolds, Josh Brolin", foto: "img/marvel-deadpool-2.jpg", rating: null,
+      sinopsis: "Deadpool arma su propio equipo para proteger a un joven mutante de Cable, un soldado que viene del futuro."
+    },
+    {
+      id: "deadpool-y-wolverine", titulo: "Deadpool & Wolverine", categoria: "Películas de Marvel", tipo: "Película", anio: "2024", anioNum: 2024,
+      reparto: "Ryan Reynolds, Hugh Jackman", foto: "img/marvel-deadpool-3.jpg", rating: null,
+      sinopsis: "Deadpool se une a una versión de Wolverine para salvar su universo, en una aventura que lo conecta con el universo cinematográfico de Marvel."
+    },
+    {
+      id: "thor-un-mundo-oscuro", titulo: "Thor: Un mundo oscuro", categoria: "Películas de Marvel", tipo: "Película", anio: "2013", anioNum: 2013,
+      reparto: "Chris Hemsworth, Natalie Portman, Tom Hiddleston", foto: "img/marvel-thor-2.jpg", rating: null,
+      sinopsis: "Thor debe enfrentar a los elfos oscuros, que buscan sumir el universo en la oscuridad, y para lograrlo necesita la ayuda de su hermano Loki."
+    },
+    {
+      id: "thor-ragnarok", titulo: "Thor: Ragnarok", categoria: "Películas de Marvel", tipo: "Película", anio: "2017", anioNum: 2017,
+      reparto: "Chris Hemsworth, Tom Hiddleston, Cate Blanchett · dir. Taika Waititi", foto: "img/marvel-thor-3.jpg", rating: null,
+      sinopsis: "Prisionero en un planeta lejano, Thor debe sobrevivir a una pelea de gladiadores y volver a Asgard para detener a Hela antes del Ragnarok."
+    },
+    {
+      id: "capitan-america-el-primer-vengador", titulo: "Capitán América: El primer vengador", categoria: "Películas de Marvel", tipo: "Película", anio: "2011", anioNum: 2011,
+      reparto: "Chris Evans, Hayley Atwell", foto: "img/marvel-capitan-america-1.jpg", rating: null,
+      sinopsis: "Durante la Segunda Guerra Mundial, Steve Rogers, un joven frágil pero valiente, se convierte en el Capitán América gracias a un suero experimental."
+    },
+    {
+      id: "capitan-america-el-soldado-del-invierno", titulo: "Capitán América: El soldado del invierno", categoria: "Películas de Marvel", tipo: "Película", anio: "2014", anioNum: 2014,
+      reparto: "Chris Evans, Scarlett Johansson, Sebastian Stan", foto: "img/marvel-capitan-america-2.jpg", rating: null,
+      sinopsis: "Steve Rogers descubre una conspiración dentro de S.H.I.E.L.D. y se enfrenta a un misterioso asesino conocido como el Soldado del Invierno."
+    },
+    {
+      id: "capitan-america-civil-war", titulo: "Capitán América: Civil War", categoria: "Películas de Marvel", tipo: "Película", anio: "2016", anioNum: 2016,
+      reparto: "Chris Evans, Robert Downey Jr.", foto: "img/marvel-capitan-america-3.jpg", rating: null,
+      sinopsis: "Un acuerdo para controlar a los superhéroes divide a los Vengadores en dos bandos, liderados por el Capitán América y por Iron Man."
     }
   ]
 };

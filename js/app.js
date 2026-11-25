@@ -100,7 +100,7 @@
       if (Array.isArray(b)) return `<ul>${b.map(li => `<li>${richText(li)}</li>`).join("")}</ul>`;
       if (b && b.afiches) {
         return `<div class="poster-strip">${b.afiches.filter(x => staticImg(x.foto)).map(x => `
-          <figure><img src="${esc(x.foto)}" alt="${esc(x.titulo)}" loading="lazy"><figcaption>${esc(x.titulo)}</figcaption></figure>`).join("")}</div>`;
+          ${x.id && itemsById[x.id] ? `<a href="#/titulo/${esc(x.id)}">` : ""}<figure><img src="${esc(x.foto)}" alt="${esc(x.titulo)}" loading="lazy"><figcaption>${esc(x.titulo)}</figcaption></figure>${x.id && itemsById[x.id] ? "</a>" : ""}`).join("")}</div>`;
       }
       return b.startsWith("## ") ? `<h3>${richText(b.slice(3))}</h3>` : `<p>${richText(b)}</p>`;
     }).join("");
@@ -111,12 +111,15 @@
   function articleAuthorRaw(a) { return state.content["author:article:" + a.id] || a.autor || ""; }
   function articleAuthor(a) { return articleAuthorRaw(a) || "Equipo CineLab"; }
 
+  // "Película · 2016", o solo el tipo si no se conoce el año.
+  function tipoAnio(i) { return esc(i.tipo) + (i.anio ? " · " + esc(i.anio) : ""); }
+
   function catHue(cat) { return [28, 350, 265, 210, 150, 45][Math.max(0, catNames.indexOf(cat)) % 6]; }
 
   // Foto de la película o, si todavía no tiene, un afiche generado con su título.
   function poster(i, cls) {
     const url = itemPhoto(i);
-    return `<div class="poster${cls ? " " + cls : ""}"><div class="poster-ph" style="--h:${catHue(i.categoria)}"><span class="ph-title">${esc(i.titulo)}</span><span class="ph-year">${esc(i.tipo)} · ${esc(i.anio)}</span></div>${url
+    return `<div class="poster${cls ? " " + cls : ""}"><div class="poster-ph" style="--h:${catHue(i.categoria)}"><span class="ph-title">${esc(i.titulo)}</span><span class="ph-year">${tipoAnio(i)}</span></div>${url
       ? `<img src="${esc(url)}" alt="${esc(i.titulo)}" loading="lazy">` : ""}</div>`;
   }
 
@@ -359,7 +362,7 @@
         <div class="card-body">
           <p class="cat">${esc(i.categoria)}</p>
           <h3>${esc(i.titulo)}</h3>
-          <p class="meta">${esc(i.tipo)} · ${esc(i.anio)}</p>
+          <p class="meta">${tipoAnio(i)}</p>
           <p class="snippet">${esc(i.sinopsis)}</p>
           ${itemReview(i) && itemReview(i).autor ? `<p class="card-sign">✍️ Reseña de ${esc(itemReview(i).autor)}</p>` : ""}
           <p class="card-foot">${n ? `💬 ${n} ${n === 1 ? "reseña" : "reseñas"} · comunidad ${community}` : "Sin reseñas todavía"}${state.watchlist.includes(i.id) ? " · 📌 en tu lista" : ""}</p>
@@ -461,7 +464,7 @@
   function rankingEntries(a) {
     return a.cuerpo
       .filter(b => typeof b === "string" && b.startsWith("## "))
-      .map(b => b.slice(3).replace(/^[^0-9A-Za-zÁÉÍÓÚÑáéíóúñ¿¡]+/, "").replace(/^\d+\.\s*/, "").split(" — ")[0].trim())
+      .map(b => b.slice(3).replace(/\[\[([a-z0-9-]+)(?:\|([^\]]+))?\]\]/g, (m, id, label) => label || (itemsById[id] || {}).titulo || id).replace(/^[^0-9A-Za-zÁÉÍÓÚÑáéíóúñ¿¡]+/, "").replace(/^\d+\.\s*/, "").split(" — ")[0].trim())
       .filter(t => t && !/^conclusi/i.test(t));
   }
 
@@ -501,6 +504,8 @@
     const top = items.filter(i => i.top).sort((a, b) => a.top - b.top);
     const ultimas = state.reviews.slice(0, 3);
     const feat = featuredReview();
+    // Cartelera: primero los títulos que tienen foto.
+    const marquee = items.filter(i => itemPhoto(i)).concat(items.filter(i => !itemPhoto(i))).slice(0, 24);
     // Las últimas reseñas firmadas que se sumaron al catálogo.
     const firmadas = items.filter(i => (itemReview(i) || {}).autor).slice(-3).reverse();
     const medals = ["🎬", "👏", "🔥", "🧭", "🦇", "🚩"];
@@ -520,8 +525,8 @@
 
       <div class="marquee" aria-label="Cartelera">
         <div class="marquee-track">
-          ${items.concat(items).map((i, n) => `
-            <a class="marquee-item" href="#/titulo/${esc(i.id)}"${n >= items.length ? ' tabindex="-1" aria-hidden="true"' : ""}>
+          ${marquee.concat(marquee).map((i, n) => `
+            <a class="marquee-item" href="#/titulo/${esc(i.id)}"${n >= marquee.length ? ' tabindex="-1" aria-hidden="true"' : ""}>
               ${poster(i)}
               <span>${esc(i.titulo)}</span>
             </a>`).join("")}
@@ -577,7 +582,7 @@
   function viewCatalog() {
     const f = state.catalogo;
     const cats = ["Todas"].concat(catNames);
-    const anios = Array.from(new Set(items.map(i => i.anioNum))).sort((a, b) => b - a);
+    const anios = Array.from(new Set(items.map(i => i.anioNum).filter(Boolean))).sort((a, b) => b - a);
     const opt = (v, label, sel) => `<option value="${esc(v)}"${String(v) === String(sel) ? " selected" : ""}>${esc(label)}</option>`;
     app.innerHTML = `
       <section class="page-head">
@@ -624,7 +629,7 @@
       (!q || [i.titulo, i.reparto, i.categoria, i.sinopsis, (itemReview(i) || {}).autor].join(" ").toLowerCase().includes(q)));
     const sorters = {
       rating: (a, b) => score(b) - score(a),
-      recientes: (a, b) => b.anioNum - a.anioNum,
+      recientes: (a, b) => (b.anioNum || 0) - (a.anioNum || 0),
       resenas: (a, b) => reviewsFor(b.id).length - reviewsFor(a.id).length,
       az: (a, b) => a.titulo.localeCompare(b.titulo, "es")
     };
@@ -662,7 +667,7 @@
     // Un admin puede tener varias: el formulario escribe una nueva salvo que esté editando una.
     const mine = isAdmin() ? mineAll.find(r => r.id === state.editing) : mineAll[0];
     const inList = state.watchlist.includes(i.id);
-    const trailer = "https://www.youtube.com/results?search_query=" + encodeURIComponent(`${i.titulo} ${i.anioNum} tráiler`);
+    const trailer = "https://www.youtube.com/results?search_query=" + encodeURIComponent(`${i.titulo} ${i.anioNum || ""} tráiler`);
     const photos = list.filter(r => safeImg(r.photoUrl));
     document.title = i.titulo + " — CineLab";
     app.innerHTML = `
@@ -675,7 +680,7 @@
         <div class="title-main">
           <p class="cat">${esc(i.categoria)}</p>
           <h1>${esc(i.titulo)}</h1>
-          <p class="meta">${esc(i.tipo)} · ${esc(i.anio)}<br>${esc(i.reparto)}${i.detalles ? `<br>${esc(i.detalles)}` : ""}</p>
+          <p class="meta">${tipoAnio(i)}${i.reparto ? `<br>${esc(i.reparto)}` : ""}${i.detalles ? `<br>${esc(i.detalles)}` : ""}</p>
           <p class="synopsis">${esc(i.sinopsis)}</p>
           <div class="hero-actions">
             <button class="btn${inList ? " btn-ghost" : ""}" data-action="watch" data-id="${esc(i.id)}">${inList ? "✓ En tu lista" : "📌 Quiero verla"}</button>
@@ -699,8 +704,8 @@
 
       ${articlesAbout(i.id).length ? `
       <section class="section">
-        <h2>Artículos que la mencionan</h2>
-        <div class="grid">${articlesAbout(i.id).map(articleCard).join("")}</div>
+        <h2>Aparece en</h2>
+        <div class="grid">${articlesAbout(i.id).map(a => a.tipo === "ranking" ? rankingCard(a) : articleCard(a)).join("")}</div>
       </section>` : ""}
 
       <section class="section" id="reviewForm">
@@ -907,7 +912,7 @@
       </article>
       ${cited.length ? `
         <section class="section">
-          <h2>Títulos citados</h2>
+          <h2>${a.tipo === "ranking" ? "Películas del ranking" : "Títulos citados"}</h2>
           <div class="grid">${cited.map(card).join("")}</div>
         </section>` : ""}
       ${others.length ? `
@@ -971,7 +976,7 @@
             ${items.filter(i => i.categoria === c).map(i => `
               <div class="admin-row">
                 ${poster(i, "poster-thumb")}
-                <a class="admin-name" href="#/titulo/${esc(i.id)}"><strong>${esc(i.titulo)}</strong><small>${esc(i.tipo)} · ${esc(i.anio)} · comunidad ${communityScore(i.id) || "–"}</small></a>
+                <a class="admin-name" href="#/titulo/${esc(i.id)}"><strong>${esc(i.titulo)}</strong><small>${tipoAnio(i)} · comunidad ${communityScore(i.id) || "–"}</small></a>
                 <span class="admin-photo">
                   ${itemReview(i) ? `<button class="link-btn" data-action="item-sign" data-id="${esc(i.id)}" title="Firma de la reseña">✍️ ${itemReview(i).autor ? esc(itemReview(i).autor) : "Firmar reseña"}</button>` : ""}
                   <button class="link-btn" data-action="item-photo" data-id="${esc(i.id)}">📷 ${itemPhoto(i) ? "Cambiar" : "Foto"}</button>
@@ -1189,7 +1194,7 @@
           ${poster(pick, "poster-roulette")}
           <div>
             <p class="cat">${esc(pick.categoria)}</p>
-            <p class="meta">${esc(pick.tipo)} · ${esc(pick.anio)}${pick.rating != null ? ` · <span class="rating">★ ${esc(pick.rating)}</span>` : ""}</p>
+            <p class="meta">${tipoAnio(pick)}${pick.rating != null ? ` · <span class="rating">★ ${esc(pick.rating)}</span>` : ""}</p>
             <p>${esc(truncate(pick.sinopsis, 160))}</p>
             <div class="hero-actions">
               <a class="btn btn-small" href="#/titulo/${esc(pick.id)}">Ver ficha</a>

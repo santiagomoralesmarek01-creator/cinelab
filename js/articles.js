@@ -149,27 +149,27 @@ window.CINELAB_ARTICULOS = [
     bajada: "Las diez películas más vistas de la semana en Netflix, Prime Video, Disney+ y HBO Max, con una reseña de cada una.",
     autor: "Carolina Ardenghi",
     etiquetas: ["Rankings", "Streaming"],
-    titulos: [],
+    titulos: ["no-nos-rendimos", "the-mongoose", "backrooms", "matilda", "the-one", "drive-the-pretenders", "spider-man-no-way-home", "un-bon-avocat", "the-pout-pout-fish", "rust"],
     cuerpo: [
-      "## 1. No nos rendimos (Never Surrender) — Netflix · Acción",
+      "## 1. [[no-nos-rendimos|No nos rendimos (Never Surrender)]] — Netflix · Acción",
       "Un excombatiente de las fuerzas especiales que intenta dejar atrás su pasado violento se ve obligado a regresar al circuito clandestino de peleas ilegales para saldar una deuda que amenaza la vida de su hermano menor. A medida que avanza en un torneo sin reglas controlado por una organización criminal, descubre que el combate es solo una fachada para encubrir una red de corrupción mucho mayor. Es un thriller de acción directo, de ritmo vertiginoso y coreografías de combate cuerpo a cuerpo crudas y realistas, ideal para quienes buscan entretenimiento sin pausas centrado en la lealtad familiar, el sacrificio y la supervivencia.",
-      "## 2. The Mongoose — Prime Video · Acción / Suspenso",
+      "## 2. [[the-mongoose|The Mongoose]] — Prime Video · Acción / Suspenso",
       "Protagonizada por Liam Neeson, la trama sigue a un condecorado veterano de guerra que es incriminado en un crimen de Estado y debe emprender una huida contrarreloj mientras las agencias de inteligencia despliegan una cacería nacional para capturarlo. Utilizando su entrenamiento táctico y una red de antiguos contactos, intenta desenmascarar una conspiración en las altas esferas militares antes de ser silenciado. La película combina persecuciones tensas, emboscadas y una atmósfera sombría con el clásico perfil del héroe solitario contra el sistema, manteniendo un suspenso constante apoyado en la solvencia dramática y la presencia física de su protagonista.",
-      "## 3. Backrooms — Disney+ · Terror / Ciencia ficción",
+      "## 3. [[backrooms|Backrooms]] — Disney+ · Terror / Ciencia ficción",
       "Basada en el célebre fenómeno viral de internet y los relatos colaborativos de terror, la historia acompaña a un grupo de investigadores y documentalistas que, tras realizar un experimento de campo, queda atrapado en una dimensión paralela infinita compuesta por laberintos de pasillos amarillos, oficinas vacías y el zumbido constante de luces fluorescentes. Conforme intentan encontrar una salida, perciben que no están solos y que las leyes del espacio y el tiempo comienzan a colapsar. Construye un horror atmosférico, opresivo y claustrofóbico que prioriza la desorientación psicológica y el diseño sonoro por encima de los sustos convencionales.",
-      "## 4. Matilda — HBO Max · Comedia / Familiar",
+      "## 4. [[matilda|Matilda]] — HBO Max · Comedia / Familiar",
       "La clásica adaptación cinematográfica de la novela de Roald Dahl narra la vida de una niña extraordinariamente inteligente y amante de los libros que crece en el seno de una familia egoísta y superficial que desprecia su talento. Al ingresar a la escuela, debe enfrentar la tiranía de la temible directora Tronchatoro, al tiempo que descubre que posee poderes telequinéticos capaces de defender a sus compañeros y a su bondadosa maestra, la señorita Miel. Su encanto perdurable reside en el equilibrio entre el humor ácido, una puesta en escena caricaturesca inolvidable y un mensaje atemporal sobre la empatía, la justicia y el poder emancipador de la lectura.",
-      "## 5. The One — Netflix · Romance / Drama",
+      "## 5. [[the-one|The One]] — Netflix · Romance / Drama",
       "Ambientada en un futuro cercano donde el avance científico permite realizar una prueba de ADN capaz de identificar a la pareja genéticamente perfecta para cada persona, la película entrelaza las historias de distintos personajes cuyas vidas sentimentales cambian de rumbo tras someterse al test. Mientras algunos encuentran una conexión inmediata, otros ven cómo sus matrimonios consolidados se desmoronan ante la duda de si existe alguien \"mejor\" esperando en algún lugar. Funciona como un drama romántico con tintes de intriga psicológica que invita a reflexionar sobre el libre albedrío, el miedo al compromiso y hasta qué punto el amor depende de la biología o de la construcción cotidiana.",
-      "## 6. Drive - The Pretenders — Prime Video · Acción",
+      "## 6. [[drive-the-pretenders|Drive - The Pretenders]] — Prime Video · Acción",
       "Un conductor solitario y metódico, especializado en fugas nocturnas para la delincuencia organizada de la ciudad, acepta un último encargo que aparenta ser sencillo pero termina convirtiéndose en una emboscada mortal tras un robo fallido. Con una pasajera inesperada a bordo y un botín codiciado, debe atravesar la ciudad durante una madrugada interminable esquivando tanto a la policía como a sicarios. Apuesta por una estética urbana nocturna muy estilizada, una banda sonora electrónica envolvente y secuencias automovilísticas de altísima precisión que sostienen la adrenalina de principio a fin.",
-      "## 7. Spider-Man: No Way Home — Disney+ · Superhéroes / Acción",
+      "## 7. [[spider-man-no-way-home|Spider-Man: No Way Home]] — Disney+ · Superhéroes / Acción",
       "Tras quedar expuesta públicamente su identidad secreta y ver cómo la vida de sus seres queridos se ve amenazada por el escrutinio mediático y judicial, Peter Parker recurre al Doctor Strange para lanzar un hechizo que borre la memoria del mundo. Sin embargo, la intervención fallida fractura las barreras del multiverso y trae de regreso a peligrosos villanos y aliados de realidades alternativas. El largometraje combina el espectáculo visual de gran escala y la nostalgia cinematográfica con una evolución madura del personaje, obligando al protagonista a enfrentar pérdidas devastadoras y a comprender el verdadero costo moral de ser un héroe.",
-      "## 8. Un bon avocat (Un buen abogado) — Netflix · Drama legal",
+      "## 8. [[un-bon-avocat|Un bon avocat (Un buen abogado)]] — Netflix · Drama legal",
       "Un prestigioso y calculador abogado penalista de París ve su brillante carrera, su matrimonio y sus convicciones éticas puestas a prueba cuando acepta la defensa de un caso mediático repleto de contradicciones y presiones políticas. A medida que profundiza en las pruebas, descubre que la verdad jurídica y la verdad moral rara vez coinciden, enfrentándose al dilema de ganar el juicio a cualquier precio o arriesgarlo todo para evitar una injusticia. Es un drama judicial sobrio, elegante y sostenido en diálogos afilados que examina los claroscuros del sistema penal, la manipulación de la opinión pública y el peso de la conciencia profesional.",
-      "## 9. The Pout-Pout Fish — HBO Max · Animación",
+      "## 9. [[the-pout-pout-fish|The Pout-Pout Fish]] — HBO Max · Animación",
       "Adaptación del popular libro infantil ilustrado sobre el señor Pez, una criatura marina de expresión eternamente melancólica que está convencida de que su único destino en el océano es repartir tristeza a su alrededor. Cuando una crisis amenaza el equilibrio de su arrecife, emprende una colorida aventura submarina junto a un grupo de excéntricos amigos marinos, descubriendo en el camino su verdadero valor. Con una animación vibrante, canciones pegadizas y un humor accesible para todas las edades, ofrece una fábula cálida y emotiva sobre la amistad, la superación de los prejuicios propios y el poder transformador de una sonrisa.",
-      "## 10. Rust — Prime Video · Western / Drama",
+      "## 10. [[rust|Rust]] — Prime Video · Western / Drama",
       "Ambientada en los áridos territorios de Kansas a finales del siglo XIX, la historia sigue a Harland Rust, un veterano y endurecido forajido que sale de su escondite para rescatar a su nieto de trece años, condenado a la horca tras haber matado accidentalmente a un ranchero local. Ambos emprenden una difícil travesía hacia la frontera mexicana mientras son perseguidos por un implacable alguacil federal y un cazarrecompensas. Se caracteriza por un tono sombrío, grandes paisajes y una mirada cruda sobre la culpa, la redención y los lazos familiares en un mundo regido por la violencia."
     ]
   },
@@ -181,41 +181,41 @@ window.CINELAB_ARTICULOS = [
     autor: "Ramiro García",
     foto: "img/marvel-capitan-america-3.jpg",
     etiquetas: ["Marvel", "Rankings"],
-    titulos: [],
+    titulos: ["guardianes-de-la-galaxia", "guardianes-de-la-galaxia-vol-2", "guardianes-de-la-galaxia-vol-3", "spider-man-de-regreso-a-casa", "spider-man-lejos-de-casa", "spider-man-no-way-home", "deadpool", "deadpool-2", "deadpool-y-wolverine", "thor", "thor-un-mundo-oscuro", "thor-ragnarok", "capitan-america-el-primer-vengador", "capitan-america-el-soldado-del-invierno", "capitan-america-civil-war"],
     cuerpo: [
       "## Guardianes de la Galaxia",
       { afiches: [
-        { foto: "img/marvel-guardianes-1.jpg", titulo: "Guardianes de la Galaxia (2014)" },
-        { foto: "img/marvel-guardianes-2.jpg", titulo: "Guardianes de la Galaxia Vol. 2 (2017)" },
-        { foto: "img/marvel-guardianes-3.jpg", titulo: "Guardianes de la Galaxia Vol. 3 (2023)" }
+        { id: "guardianes-de-la-galaxia", foto: "img/marvel-guardianes-1.jpg", titulo: "Guardianes de la Galaxia (2014)" },
+        { id: "guardianes-de-la-galaxia-vol-2", foto: "img/marvel-guardianes-2.jpg", titulo: "Guardianes de la Galaxia Vol. 2 (2017)" },
+        { id: "guardianes-de-la-galaxia-vol-3", foto: "img/marvel-guardianes-3.jpg", titulo: "Guardianes de la Galaxia Vol. 3 (2023)" }
       ] },
       "A mi parecer, la mejor película de las tres es el volumen 3. La historia que narra y los sentimientos encontrados hacen que destaque más.",
       "## Spider-Man (Tom Holland)",
       { afiches: [
-        { foto: "img/marvel-spiderman-1.jpg", titulo: "Spider-Man: De regreso a casa (2017)" },
-        { foto: "img/marvel-spiderman-2.jpg", titulo: "Spider-Man: Lejos de casa (2019)" },
-        { foto: "img/marvel-spiderman-3.jpg", titulo: "Spider-Man: Sin camino a casa (2021)" }
+        { id: "spider-man-de-regreso-a-casa", foto: "img/marvel-spiderman-1.jpg", titulo: "Spider-Man: De regreso a casa (2017)" },
+        { id: "spider-man-lejos-de-casa", foto: "img/marvel-spiderman-2.jpg", titulo: "Spider-Man: Lejos de casa (2019)" },
+        { id: "spider-man-no-way-home", foto: "img/marvel-spiderman-3.jpg", titulo: "Spider-Man: Sin camino a casa (2021)" }
       ] },
       "Las tres películas son buenas: la historia de un nuevo Spider-Man es atrapante e interesante. No Way Home se destaca más gracias a la nostalgia de los anteriores Spider-Man y su aparición impactante.",
       "## Deadpool",
       { afiches: [
-        { foto: "img/marvel-deadpool-1.jpg", titulo: "Deadpool (2016)" },
-        { foto: "img/marvel-deadpool-2.jpg", titulo: "Deadpool 2 (2018)" },
-        { foto: "img/marvel-deadpool-3.jpg", titulo: "Deadpool & Wolverine (2024)" }
+        { id: "deadpool", foto: "img/marvel-deadpool-1.jpg", titulo: "Deadpool (2016)" },
+        { id: "deadpool-2", foto: "img/marvel-deadpool-2.jpg", titulo: "Deadpool 2 (2018)" },
+        { id: "deadpool-y-wolverine", foto: "img/marvel-deadpool-3.jpg", titulo: "Deadpool & Wolverine (2024)" }
       ] },
       "Es una trilogía de un superhéroe inmortal que mezcla humor y acción. La mejor, en mi opinión, es la primera, aunque pelea con Deadpool & Wolverine: las referencias a otras películas del UCM y la conexión que tiene con Avengers: Doomsday generan expectativas y atención del público hacia la película.",
       "## Thor",
       { afiches: [
-        { foto: "img/marvel-thor-1.jpg", titulo: "Thor (2011)" },
-        { foto: "img/marvel-thor-2.jpg", titulo: "Thor: Un mundo oscuro (2013)" },
-        { foto: "img/marvel-thor-3.jpg", titulo: "Thor: Ragnarok (2017)" }
+        { id: "thor", foto: "img/marvel-thor-1.jpg", titulo: "Thor (2011)" },
+        { id: "thor-un-mundo-oscuro", foto: "img/marvel-thor-2.jpg", titulo: "Thor: Un mundo oscuro (2013)" },
+        { id: "thor-ragnarok", foto: "img/marvel-thor-3.jpg", titulo: "Thor: Ragnarok (2017)" }
       ] },
       "Thor es un vengador sumamente importante que conecta a Marvel con la mitología nórdica. Es una trilogía criticada más que nada por su segunda película y la diferencia abismal que hay con Thor: Ragnarok, que conecta perfectamente con la historia y con la película siguiente (Avengers: Infinity War).",
       "## Capitán América",
       { afiches: [
-        { foto: "img/marvel-capitan-america-1.jpg", titulo: "Capitán América: El primer vengador (2011)" },
-        { foto: "img/marvel-capitan-america-2.jpg", titulo: "Capitán América: El soldado del invierno (2014)" },
-        { foto: "img/marvel-capitan-america-3.jpg", titulo: "Capitán América: Civil War (2016)" }
+        { id: "capitan-america-el-primer-vengador", foto: "img/marvel-capitan-america-1.jpg", titulo: "Capitán América: El primer vengador (2011)" },
+        { id: "capitan-america-el-soldado-del-invierno", foto: "img/marvel-capitan-america-2.jpg", titulo: "Capitán América: El soldado del invierno (2014)" },
+        { id: "capitan-america-civil-war", foto: "img/marvel-capitan-america-3.jpg", titulo: "Capitán América: Civil War (2016)" }
       ] },
       "Uno de los vengadores más queridos. Sus primeras dos películas son buenas, pero lejos la mejor es Civil War: la historia y todos los personajes incluidos hacen que la película se disfrute y no tenga momentos malos. Para muchos, la mejor película de Marvel."
     ]
@@ -227,22 +227,22 @@ window.CINELAB_ARTICULOS = [
     bajada: "Del primer amor a los vínculos que nacen en circunstancias inesperadas: cinco historias románticas, con reseña y valoración.",
     autor: "Priscila Alvarado",
     etiquetas: ["Películas románticas", "Rankings", "Streaming"],
-    titulos: [],
+    titulos: ["a-todos-los-chicos", "corazones-malheridos", "la-ultima-cancion", "fabricante-de-lagrimas", "a-traves-de-mi-ventana"],
     cuerpo: [
       "Este ranking reúne cinco películas románticas asociadas al catálogo de Netflix. La selección está organizada según el interés de sus historias, la construcción de sus personajes y las emociones que transmiten. Cada reseña presenta brevemente el argumento y los temas principales.",
-      "## 1. A todos los chicos de los que me enamoré (2018)",
+      "## 1. [[a-todos-los-chicos|A todos los chicos de los que me enamoré (2018)]]",
       "Género: romance y comedia romántica.",
       "Lara Jean escribe cartas secretas a los chicos de los que estuvo enamorada, pero su vida cambia cuando esas cartas llegan inesperadamente a sus destinatarios. A partir de ese momento debe enfrentar situaciones incómodas y descubrir qué siente realmente. Es una historia entretenida y emotiva sobre el primer amor, la adolescencia y la identidad.",
-      "## 2. Corazones malheridos (2022)",
+      "## 2. [[corazones-malheridos|Corazones malheridos (2022)]]",
       "Género: romance y drama.",
       "Cassie, una cantante, y Luke, un militar, aceptan un matrimonio por conveniencia para resolver problemas económicos. Aunque al principio su relación se basa en un acuerdo, con el tiempo comienzan a conocerse y a desarrollar sentimientos verdaderos. La película aborda el amor, los prejuicios y las dificultades personales.",
-      "## 3. La última canción (2010)",
+      "## 3. [[la-ultima-cancion|La última canción (2010)]]",
       "Género: romance y drama familiar.",
       "Ronnie es una adolescente que pasa el verano junto a su padre, con quien mantiene una relación distante. Durante esa etapa conoce a Will y se enamora, mientras también comienza a reconstruir el vínculo familiar. La historia trata sobre el amor, el perdón, la madurez y las segundas oportunidades.",
-      "## 4. Fabricante de lágrimas (2024)",
+      "## 4. [[fabricante-de-lagrimas|Fabricante de lágrimas (2024)]]",
       "Género: romance y drama.",
       "Nica y Rigel crecieron en un orfanato y, luego de ser adoptados por la misma familia, deben adaptarse a una nueva vida juntos. Entre conflictos, secretos y emociones intensas, ambos descubren un vínculo complejo. La película explora las heridas del pasado, los miedos y la posibilidad de encontrar afecto.",
-      "## 5. A través de mi ventana (2022)",
+      "## 5. [[a-traves-de-mi-ventana|A través de mi ventana (2022)]]",
       "Género: romance y drama adolescente.",
       "Raquel está enamorada de su vecino Ares desde hace mucho tiempo. Cuando finalmente comienzan a acercarse, deben enfrentar diferencias personales y familiares que ponen a prueba la relación. La película representa la intensidad del primer amor y los desafíos que aparecen al construir un vínculo.",
       "## Conclusión",
@@ -258,18 +258,18 @@ window.CINELAB_ARTICULOS = [
     autor: "Ramiro García",
     foto: "img/burton-extrano-mundo-de-jack.jpg",
     etiquetas: ["Rankings", "Animación y fantasía"],
-    titulos: [],
+    titulos: ["el-extrano-mundo-de-jack", "el-cadaver-de-la-novia", "charlie-y-la-fabrica-de-chocolate"],
     cuerpo: [
       { afiches: [
-        { foto: "img/burton-extrano-mundo-de-jack.jpg", titulo: "El extraño mundo de Jack" },
-        { foto: "img/burton-cadaver-de-la-novia.jpg", titulo: "El cadáver de la novia" },
-        { foto: "img/burton-charlie-fabrica-de-chocolate.jpg", titulo: "Charlie y la fábrica de chocolate" }
+        { id: "el-extrano-mundo-de-jack", foto: "img/burton-extrano-mundo-de-jack.jpg", titulo: "El extraño mundo de Jack" },
+        { id: "el-cadaver-de-la-novia", foto: "img/burton-cadaver-de-la-novia.jpg", titulo: "El cadáver de la novia" },
+        { id: "charlie-y-la-fabrica-de-chocolate", foto: "img/burton-charlie-fabrica-de-chocolate.jpg", titulo: "Charlie y la fábrica de chocolate" }
       ] },
-      "## 1. El extraño mundo de Jack",
+      "## 1. [[el-extrano-mundo-de-jack|El extraño mundo de Jack]]",
       "Una obra maestra de la animación stop-motion. Su universo, sus canciones y su estética gótica la convierten en una película única. Es una historia sobre alguien que intenta descubrir quién es y qué quiere hacer con su vida. Esa combinación de fantasía, melancolía y creatividad es lo que la convierte en la mejor película de Tim Burton.",
-      "## 2. El cadáver de la novia",
+      "## 2. [[el-cadaver-de-la-novia|El cadáver de la novia]]",
       "Una combinación espectacular de romance, humor oscuro y fantasía. Visualmente es una de sus películas más hermosas. Es una película que demuestra que detrás de una estética oscura y personajes ficticios puede existir una historia profunda. Su temática de romance, humor y fantasía la convierte en una de las mejores obras de Tim Burton.",
-      "## 3. Charlie y la fábrica de chocolate",
+      "## 3. [[charlie-y-la-fabrica-de-chocolate|Charlie y la fábrica de chocolate]]",
       "Una peli visualmente increíble, con personajes inolvidables y un Johnny Depp que encaja perfectamente en el universo Burton. Un clásico de los 2000: es prácticamente imposible que alguien no conozca esta película. Una idea espectacular que funcionó muy bien; esta película combina una historia que relata humildad, fantasía y distintos sentimientos."
     ]
   }
